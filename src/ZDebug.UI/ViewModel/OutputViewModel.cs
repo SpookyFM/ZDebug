@@ -68,6 +68,15 @@ namespace ZDebug.UI.ViewModel
 
             debuggerService.Machine.RegisterScreen(this);
             debuggerService.Machine.RegisterSoundEngine(this);
+
+            // Listen to SizeChanged events for updating the screen size. 
+            // Otherwise, the size of the output window at load time determines the registered size
+            mainWindow.SizeChanged += OutputViewModel_SizeChanged;
+        }
+
+        private void OutputViewModel_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            debuggerService.Machine.RegisterScreen(this);
         }
 
         private void StoryService_StoryClosing(object sender, StoryClosingEventArgs e)
