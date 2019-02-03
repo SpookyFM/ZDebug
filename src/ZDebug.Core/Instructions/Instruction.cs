@@ -66,6 +66,23 @@ namespace ZDebug.Core.Instructions
             }
         }
 
+        public int? BranchOrJumpAddress
+        {
+            get
+            {
+                if (Opcode.IsJump)
+                {
+                    return Address + (short)Operands[0].Value + Length - 2;
+
+                }
+                else if (HasBranch && Branch.Kind == BranchKind.Address)
+                {
+                    return Address + Branch.Offset + Length - 2;
+                }
+                return null;
+            }
+        }
+
         public override string ToString()
         {
             return string.Format("{0:x4}: {1}", Address, Opcode.Name);
