@@ -320,7 +320,8 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0">
-                                <Run Text="  "/><Run 
+                                <Run Text="{Binding LabelText, Mode=OneWay}" />
+                                    <Run 
                                         Foreground="{StaticResource AddressForeground}" Text="{Binding Address, StringFormat=\{0:x4\}, Mode=OneWay}"/><Run
                                         Foreground="{StaticResource SeparatorForeground}" Text=":"/>
                             </TextBlock>

@@ -48,6 +48,8 @@ namespace ZDebug.UI.ViewModel
             StoryService storyService,
             DebuggerService debuggerService,
             BreakpointService breakpointService,
+            // TODO: I haven't found a better way of enforcing this to be filled in time yet
+            LabelService labelService,
             RoutineService routineService,
             NavigationService navigationService,
             EditRoutineNameDialogViewModel editRoutineNameDialogViewModel)

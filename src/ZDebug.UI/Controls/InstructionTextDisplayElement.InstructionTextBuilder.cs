@@ -5,6 +5,7 @@ using System.Windows.Media.TextFormatting;
 using ZDebug.Core.Collections;
 using ZDebug.Core.Instructions;
 using ZDebug.IO.Services;
+using ZDebug.UI.Services;
 
 namespace ZDebug.UI.Controls
 {
@@ -16,10 +17,12 @@ namespace ZDebug.UI.Controls
 
             private readonly TextParagraphProperties defaultParagraphProps;
             private readonly InstructionTextSource textSource;
+            private readonly LabelService labelService;
 
             public InstructionTextBuilder()
             {
                 this.defaultParagraphProps = new SimpleTextParagraphProperties(FontsAndColorsService.DefaultSetting);
+                this.labelService = App.Current.GetService<LabelService>();
 
                 textSource = new InstructionTextSource();
             }
@@ -77,6 +80,11 @@ namespace ZDebug.UI.Controls
                 AddText(address.ToString("x4"), FontsAndColorsService.AddressSetting);
             }
 
+            public void AddLabel(int label)
+            {
+                AddText(label.ToString("\\L00"), FontsAndColorsService.AddressSetting);
+            }
+
             public void AddBranch(Instruction instruction)
             {
                 var branch = instruction.Branch;
@@ -96,7 +104,15 @@ namespace ZDebug.UI.Controls
                 else // BranchKind.Address
                 {
                     var targetAddress = instruction.Address + instruction.Length + branch.Offset - 2;
-                    AddAddress(targetAddress);
+                    var targetLabel = labelService.GetLabel(targetAddress);
+                    if (targetLabel == null)
+                    {
+                        AddAddress(targetAddress);
+                    } else
+                    {
+                        AddLabel(targetLabel.Value);
+                    }
+                    
                 }
             }
 

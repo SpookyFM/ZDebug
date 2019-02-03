@@ -4,12 +4,14 @@ using System.Windows.Media;
 using ZDebug.Core.Instructions;
 using ZDebug.Core.Text;
 using ZDebug.UI.Services;
+using ZDebug.UI.ViewModel;
 
 namespace ZDebug.UI.Controls
 {
     internal partial class InstructionTextDisplayElement : FrameworkElement
     {
         private readonly StoryService storyService;
+        private readonly LabelService labelService;
         private readonly InstructionTextBuilder builder;
         private bool update = true;
 
@@ -31,6 +33,7 @@ namespace ZDebug.UI.Controls
         public InstructionTextDisplayElement()
         {
             this.storyService = App.Current.GetService<StoryService>();
+            this.labelService = App.Current.GetService<LabelService>();
             this.builder = new InstructionTextBuilder();
 
             TextOptions.SetTextHintingMode(this, TextHintingMode.Fixed);
@@ -95,7 +98,15 @@ namespace ZDebug.UI.Controls
                 {
                     var jumpOffset = (short)instruction.Operands[0].Value;
                     var jumpAddress = instruction.Address + instruction.Length + jumpOffset - 2;
-                    builder.AddAddress(jumpAddress);
+                    int? label = labelService.GetLabel(jumpAddress);
+                    if (label == null)
+                    {
+                        builder.AddAddress(jumpAddress);
+                    } else
+                    {
+                        builder.AddLabel(label.Value);
+                    }
+                    
                 }
                 else if (instruction.Opcode.IsFirstOpByRef)
                 {
