@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Composition;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -13,6 +14,7 @@ namespace ZDebug.UI.Services
     internal class DebuggerService : IService
     {
         private readonly StoryService storyService;
+        private readonly DataBreakpointService dataBreakpointService;
         private readonly BreakpointService breakpointService;
         private readonly RoutineService routineService;
 
@@ -31,6 +33,7 @@ namespace ZDebug.UI.Services
         public DebuggerService(
             StoryService storyService,
             BreakpointService breakpointService,
+            DataBreakpointService dataBreakpointService,
             RoutineService routineService)
         {
             this.storyService = storyService;
@@ -38,6 +41,7 @@ namespace ZDebug.UI.Services
             this.storyService.StoryClosing += StoryService_StoryClosing;
 
             this.breakpointService = breakpointService;
+            this.dataBreakpointService = dataBreakpointService;
             this.routineService = routineService;
         }
 
@@ -171,6 +175,12 @@ namespace ZDebug.UI.Services
                     }
 
                     if (state == DebuggerState.Running && breakpointService.Exists(newPC))
+                    {
+                        ChangeState(DebuggerState.Stopped);
+                    }
+
+                    var allTriggeredDataBreakpoints = dataBreakpointService.UpdateAllBreakpoints(storyService.Story.Memory);
+                    if (allTriggeredDataBreakpoints.Count() > 0)
                     {
                         ChangeState(DebuggerState.Stopped);
                     }
