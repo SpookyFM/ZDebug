@@ -43,6 +43,8 @@ namespace ZDebug.UI.ViewModel
 
         private DisassemblyLineViewModel inputLine;
 
+        private List<DisassemblyLineViewModel> stackLines;
+
         [ImportingConstructor]
         public DisassemblyViewModel(
             StoryService storyService,
@@ -78,6 +80,7 @@ namespace ZDebug.UI.ViewModel
             lines = new BulkObservableCollection<DisassemblyLineViewModel>();
             addressToLineMap = new IntegerMap<DisassemblyLineViewModel>();
             routineAddressAndIndexList = new List<AddressAndIndex>();
+            stackLines = new List<DisassemblyLineViewModel>();
 
             this.EditNameCommand = RegisterCommand<int>(
                 text: "EditName",
@@ -215,6 +218,7 @@ namespace ZDebug.UI.ViewModel
             newLine.HasIP = true;
 
             BringLineIntoView(newLine);
+            UpdateStackLines();
         }
 
         private void RoutineTable_RoutineAdded(object sender, ZRoutineAddedEventArgs e)
@@ -382,6 +386,7 @@ namespace ZDebug.UI.ViewModel
                 line.HasIP = true;
                 BringLineIntoView(line);
             }
+            UpdateStackLines();
         }
 
         private void BreakpointService_Removed(object sender, BreakpointEventArgs e)
@@ -425,6 +430,30 @@ namespace ZDebug.UI.ViewModel
             else
             {
                 // TODO: Show error message
+            }
+        }
+
+        private void UpdateStackLines()
+        {
+            foreach (var currentLine in stackLines)
+            {
+                currentLine.IsOnStack = false;
+            }
+            stackLines.Clear();
+            var stack = debuggerService.Machine.GetStackFrames();
+            foreach (var currentStackFrame in stack)
+            {
+                var currentAddress = currentStackFrame.ReturnAddress;
+                if (currentAddress > 0)
+                {
+                    // We want the line before the return address, but we don't know how long the instruction before was in memory
+                    // It might be quicker to try the address map with all possible lengths
+                    var nextLine = GetLineByAddress((int)currentAddress);
+                    var currentLineIndex = lines.IndexOf(nextLine) - 1;
+                    var currentLine = lines[currentLineIndex];
+                    currentLine.IsOnStack = true;
+                    stackLines.Add(currentLine);
+                }
             }
         }
 

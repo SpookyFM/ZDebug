@@ -4,6 +4,7 @@
     {
         private bool hasBreakpoint;
         private bool hasIP;
+        private bool isOnStack;
         private bool showBlankBefore;
         private bool showBlankAfter;
         private DisassemblyLineState state;
@@ -31,6 +32,19 @@
                 {
                     hasIP = value;
                     PropertyChanged("HasIP");
+                }
+            }
+        }
+
+        public bool IsOnStack
+        {
+            get { return isOnStack; }
+            set
+            {
+                if (isOnStack != value)
+                {
+                    isOnStack = value;
+                    PropertyChanged("IsOnStack");
                 }
             }
         }

@@ -161,6 +161,9 @@
                                             <DataTrigger Binding="{Binding Path=HasIP}" Value="True">
                                                 <Setter Property="Fill" Value="{DynamicResource ipLineBackground}"/>
                                             </DataTrigger>
+                                            <DataTrigger Binding="{Binding Path=IsOnStack}" Value="True">
+                                                <Setter Property="Fill" Value="{DynamicResource stackLineBackground}"/>
+                                            </DataTrigger>
                                             <DataTrigger Binding="{Binding Path=State}" Value="Stopped">
                                                 <Setter Property="Fill" Value="{DynamicResource doneLineBackground}"/>
                                             </DataTrigger>
@@ -178,6 +181,8 @@
                             <Border.Resources>
                                 <SolidColorBrush x:Key="ipLineBorder" Color="#FFFFF200"/>
                                 <SolidColorBrush x:Key="ipLineBackground" Color="#11FFF200"/>
+                                <SolidColorBrush x:Key="stackLineBorder" Color="#FFFFF200"/>
+                                <SolidColorBrush x:Key="stackLineBackground" Color="#11FFF200"/>
                                 <SolidColorBrush x:Key="bpLineBorder" Color="#447F0000"/>
                                 <SolidColorBrush x:Key="bpLineBackground" Color="#117F0000"/>
                                 <SolidColorBrush x:Key="doneLineBorder" Color="#FF808080"/>
@@ -199,6 +204,10 @@
                                         <DataTrigger Binding="{Binding Path=HasIP}" Value="True">
                                             <Setter Property="Visibility" Value="Visible"/>
                                             <Setter Property="BorderBrush" Value="{DynamicResource ipLineBorder}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=IsOnStack}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="BorderBrush" Value="{DynamicResource stackLineBorder}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Path=State}" Value="Stopped">
                                             <Setter Property="Visibility" Value="Visible"/>
