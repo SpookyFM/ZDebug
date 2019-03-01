@@ -1,5 +1,6 @@
 ﻿using System.Composition;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ZDebug.UI.Collections;
 using ZDebug.UI.Services;
 
@@ -10,13 +11,15 @@ namespace ZDebug.UI.ViewModel
     {
         private readonly DebuggerService debuggerService;
         private readonly RoutineService routineService;
+        private readonly NavigationService navigationService;
 
         private readonly BulkObservableCollection<StackFrameViewModel> stackFrames;
 
         [ImportingConstructor]
         public CallStackViewModel(
             DebuggerService debuggerService,
-            RoutineService routineService)
+            RoutineService routineService,
+            NavigationService navigationService)
             : base("CallStackView")
         {
             this.debuggerService = debuggerService;
@@ -26,8 +29,15 @@ namespace ZDebug.UI.ViewModel
             this.debuggerService.Stepped += DebuggerService_ProcessorStepped;
 
             this.routineService = routineService;
+            this.navigationService = navigationService;
 
             this.stackFrames = new BulkObservableCollection<StackFrameViewModel>();
+
+            JumpToDisassemblyCommand = RegisterCommand<uint>(
+                text: "Jump To Address",
+                name: "JumpToAddress",
+                executed: JumpToExecuted,
+                canExecute: CanJumpToExecute);
         }
 
         private void Update()
@@ -86,5 +96,21 @@ namespace ZDebug.UI.ViewModel
         {
             get { return stackFrames; }
         }
+        
+        public ICommand JumpToDisassemblyCommand
+        {
+            get; private set;
+        }
+
+        private void JumpToExecuted(uint address)
+        {
+            navigationService.RequestNavigation((int) address);
+        }
+
+        private bool CanJumpToExecute(uint address)
+        {
+            return true;
+        }
+
     }
 }

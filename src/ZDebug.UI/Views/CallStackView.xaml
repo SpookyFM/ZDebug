@@ -1,7 +1,10 @@
 ﻿<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+    xmlns:vm="clr-namespace:ZDebug.UI.ViewModel;assembly=ZDebug.UI.Core"
+    vm:ViewModelBase.RegisterViewModelCommands="{Binding}"
+    >
 
     <Grid Grid.IsSharedSizeScope="True">
         <ItemsControl ItemsSource="{Binding StackFrames}"
@@ -41,6 +44,15 @@
                             VerticalAlignment="Bottom"
                             Margin="8,0,0,0"
                             Text="{Binding ArgText, Mode=OneWay}"/>
+
+                        <Grid.InputBindings>
+                            <MouseBinding
+                                MouseAction="LeftDoubleClick" 
+                                Command="{Binding DataContext.JumpToDisassemblyCommand,
+                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
+                                CommandParameter="{Binding CallAddress}" 
+                            />
+                        </Grid.InputBindings>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
