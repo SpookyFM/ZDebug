@@ -51,9 +51,19 @@ namespace ZDebug.UI.ViewModel
                 {
                     stackFrames.Clear();
 
-                    foreach (var frame in frames)
+                    for (int i = 0; i < frames.Length; i++)
                     {
-                        stackFrames.Add(new StackFrameViewModel(frame, routineService.RoutineTable));
+                        var frame = frames[i];
+                        uint jumpToAddress = 0;
+                        if (i == 0)
+                        {
+                            jumpToAddress = (uint) debuggerService.Machine.PC;
+                        } else
+                        {
+                            jumpToAddress = frames[i - 1].ReturnAddress;
+                        }
+
+                        stackFrames.Add(new StackFrameViewModel(frame, routineService.RoutineTable, jumpToAddress));
                     }
                 }
                 finally

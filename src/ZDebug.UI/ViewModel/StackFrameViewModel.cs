@@ -9,11 +9,13 @@ namespace ZDebug.UI.ViewModel
     {
         private readonly StackFrame stackFrame;
         private readonly ZRoutineTable routineTable;
+        private readonly uint jumpToAddress;
 
-        public StackFrameViewModel(StackFrame stackFrame, ZRoutineTable routineTable)
+        public StackFrameViewModel(StackFrame stackFrame, ZRoutineTable routineTable, uint jumpToAddress)
         {
             this.stackFrame = stackFrame;
             this.routineTable = routineTable;
+            this.jumpToAddress = jumpToAddress;
         }
 
         public string Name
@@ -29,6 +31,12 @@ namespace ZDebug.UI.ViewModel
         public uint CallAddress
         {
             get { return stackFrame.CallAddress; }
+        }
+
+        /** The address to which we want to navigate when clicking the call stack */
+        public uint JumpToAddress
+        {
+            get { return jumpToAddress; }
         }
 
         public string ArgText

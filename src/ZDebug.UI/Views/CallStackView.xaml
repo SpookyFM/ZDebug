@@ -16,7 +16,7 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid TextElement.FontFamily="Consolas">
+                    <Grid TextElement.FontFamily="Consolas" Background="Transparent">
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="Name"/>
@@ -50,7 +50,7 @@
                                 MouseAction="LeftDoubleClick" 
                                 Command="{Binding DataContext.JumpToDisassemblyCommand,
                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
-                                CommandParameter="{Binding CallAddress}" 
+                                CommandParameter="{Binding JumpToAddress}" 
                             />
                         </Grid.InputBindings>
                     </Grid>
