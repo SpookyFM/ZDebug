@@ -526,6 +526,22 @@ namespace ZDebug.Core.Objects
             return objects[objNum - 1];
         }
 
+        public ZObject GetObjectAtAddress(ushort address)
+        {
+            var offset = address - objectEntriesAddress;
+            var remainder = offset % entrySize;
+            if (remainder != 0)
+            {
+                return null;
+            }
+            var number = offset / entrySize + 1;
+            if (number >= Count)
+            {
+                return null;
+            }
+            return this[number];
+        }
+
         public ushort GetPropertyDefault(int propNum)
         {
             return ReadPropertyDefault(propNum);
