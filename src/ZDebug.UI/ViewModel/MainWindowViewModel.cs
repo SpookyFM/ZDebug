@@ -137,6 +137,13 @@ namespace ZDebug.UI.ViewModel
                 name: "About Game",
                 executed: AboutGameExecuted,
                 canExecute: CanAboutGameExecute);
+
+            this.SetVariableViewCommand = RegisterCommand(
+                text: "SetVariableView",
+                name: "Set Variable View",
+                executed: SetVariableViewExecuted,
+                canExecute: CanSetVariableViewExecute
+                );
         }
 
         private bool CanOpenStoryExecute()
@@ -257,6 +264,17 @@ namespace ZDebug.UI.ViewModel
             gameInfoDialogViewModel.ShowDialog(owner: this.View);
         }
 
+        private bool CanSetVariableViewExecute()
+        {
+            return true;
+        }
+
+        private void SetVariableViewExecuted()
+        {
+            int i = 5;
+            i++;
+        }
+
         public ICommand OpenStoryCommand { get; private set; }
         public ICommand EditGameScriptCommand { get; private set; }
         public ICommand GoToAddressCommand { get; private set; }
@@ -267,6 +285,7 @@ namespace ZDebug.UI.ViewModel
         public ICommand ResetSessionCommand { get; private set; }
         public ICommand ResetWindowLayoutCommand { get; private set; }
         public ICommand AboutGameCommand { get; private set; }
+        public ICommand SetVariableViewCommand { get; private set; }
 
         public string Title
         {

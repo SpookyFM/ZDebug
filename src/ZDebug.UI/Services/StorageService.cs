@@ -13,7 +13,8 @@ namespace ZDebug.UI.Services
         private readonly IPersistable dataBreakpointPersistence;
         private readonly IPersistable gameScriptPersistence;
         private readonly IPersistable routinePersistence;
-        
+        private readonly IPersistable variableViewsPersistence;
+
 
         [ImportingConstructor]
         public StorageService(
@@ -21,7 +22,9 @@ namespace ZDebug.UI.Services
             BreakpointService breakpointService,
             DataBreakpointService dataBreakpointService,
             GameScriptService gameScriptService,
-            RoutineService routineService)
+            RoutineService routineService,
+            VariableViewService variableViewService
+            )
         {
             this.storyPersistence = storyService;
             storyService.StoryOpened += StoryService_StoryOpened;
@@ -30,6 +33,7 @@ namespace ZDebug.UI.Services
             this.dataBreakpointPersistence = dataBreakpointService;
             this.gameScriptPersistence = gameScriptService;
             this.routinePersistence = routineService;
+            this.variableViewsPersistence = variableViewService;
         }
 
         private void StoryService_StoryOpened(object sender, StoryOpenedEventArgs e)
@@ -50,6 +54,7 @@ namespace ZDebug.UI.Services
             dataBreakpointPersistence.Load(xml);
             gameScriptPersistence.Load(xml);
             routinePersistence.Load(xml);
+            variableViewsPersistence.Load(xml);
         }
 
         private void SaveSettings(Story story)
@@ -60,9 +65,12 @@ namespace ZDebug.UI.Services
                     breakpointPersistence.Store(),
                     dataBreakpointPersistence.Store(),
                     gameScriptPersistence.Store(),
-                    routinePersistence.Store());
+                    routinePersistence.Store(),
+                    variableViewsPersistence.Store()
+                    );
 
             Storage.SaveStorySettings(story, xml);
         }
     }
 }
+

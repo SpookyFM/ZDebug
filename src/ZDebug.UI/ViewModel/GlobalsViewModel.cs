@@ -1,5 +1,7 @@
-﻿using System.Composition;
+﻿using System.Collections.Generic;
+using System.Composition;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ZDebug.UI.Services;
 
 namespace ZDebug.UI.ViewModel
@@ -9,13 +11,15 @@ namespace ZDebug.UI.ViewModel
     {
         private readonly StoryService storyService;
         private readonly DebuggerService debuggerService;
+        private readonly VariableViewService variableViewService;
 
         private readonly IndexedVariableViewModel[] globals;
 
         [ImportingConstructor]
         public GlobalsViewModel(
             StoryService storyService,
-            DebuggerService debuggerService)
+            DebuggerService debuggerService,
+            VariableViewService variableViewService)
             : base("GlobalsView")
         {
             this.storyService = storyService;
@@ -26,6 +30,9 @@ namespace ZDebug.UI.ViewModel
             this.debuggerService.StateChanged += DebuggerService_StateChanged;
             this.debuggerService.Stepped += DebuggerService_ProcessorStepped;
 
+            this.variableViewService = variableViewService;
+            variableViewService.GlobalViewChanged += VariableViewService_GlobalViewChanged;
+
             this.globals = new IndexedVariableViewModel[240];
 
             for (int i = 0; i < 240; i++)
@@ -34,6 +41,17 @@ namespace ZDebug.UI.ViewModel
                 newGlobal.Visible = false;
                 globals[i] = newGlobal;
             }
+
+            SetVariableViewCommand = RegisterCommand<KeyValuePair<VariableViewModel, VariableView>>(
+                text: "Set Variable View",
+                name: "SetVariableView",
+                executed: SetVariableViewExecuted,
+                canExecute: CanSetVariableViewExecute);
+        }
+
+        private void VariableViewService_GlobalViewChanged(object sender, GlobalViewChangedArgs e)
+        {
+            globals[e.Index].VariableView = e.NewView;
         }
 
         private void Update(bool storyOpened = false)
@@ -50,6 +68,8 @@ namespace ZDebug.UI.ViewModel
                     var newGlobalValue = story.GlobalVariablesTable[i];
                     global.IsModified = !storyOpened && global.Value != newGlobalValue;
                     global.Value = newGlobalValue;
+                    var variableView = variableViewService.GetViewForGlobal(i);
+                    global.VariableView = variableView;
                 }
             }
         }
@@ -88,9 +108,26 @@ namespace ZDebug.UI.ViewModel
             }
         }
 
+        private bool CanSetVariableViewExecute(KeyValuePair<VariableViewModel, VariableView> parameter)
+        {
+            return true;
+        }
+
+        private void SetVariableViewExecuted(KeyValuePair<VariableViewModel, VariableView> parameter)
+        {
+            var viewModel = (IndexedVariableViewModel)parameter.Key;
+            var view = parameter.Value;
+            variableViewService.SetViewForGlobal(viewModel.Index, view);
+        }
+
         public IndexedVariableViewModel[] Globals
         {
             get { return globals; }
+        }
+
+        public ICommand SetVariableViewCommand
+        {
+            get; private set;
         }
     }
 }

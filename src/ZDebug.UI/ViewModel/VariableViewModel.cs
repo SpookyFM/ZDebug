@@ -1,4 +1,6 @@
 ﻿
+using ZDebug.UI.Services;
+
 namespace ZDebug.UI.ViewModel
 {
     internal class VariableViewModel : ViewModelBase
@@ -6,6 +8,7 @@ namespace ZDebug.UI.ViewModel
         private ushort value;
         private bool isModified;
         private bool visible;
+        private VariableView variableView;
 
         public VariableViewModel(ushort value)
         {
@@ -37,7 +40,44 @@ namespace ZDebug.UI.ViewModel
                 {
                     this.value = value;
                     PropertyChanged("Value");
+                    PropertyChanged("DisplayValue");
                 }
+            }
+        }
+
+        public VariableView VariableView
+        {
+            get
+            {
+                return variableView;
+            }
+            set
+            {
+                if (this.variableView != value)
+                {
+                    this.variableView = value;
+                    PropertyChanged("VariableView");
+                    PropertyChanged("DisplayValue");
+                }
+            }
+        }
+
+        public string DisplayValue
+        {
+            get
+            {
+                var storyService = App.Current.GetService<StoryService>();
+                if (!storyService.IsStoryOpen)
+                {
+
+                    return VariableViews.HexadecimalView.ConvertToString(this.value, new byte[] { });
+                }
+                var memory = storyService.Story.Memory;
+                if (VariableView == null)
+                {
+                    return VariableViews.HexadecimalView.ConvertToString(this.value, memory);
+                }
+                return VariableView.ConvertToString(this.value, memory);
             }
         }
 

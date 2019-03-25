@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Composition;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ZDebug.Core.Extensions;
 using ZDebug.UI.Services;
 
@@ -11,6 +13,8 @@ namespace ZDebug.UI.ViewModel
     {
         private readonly StoryService storyService;
         private readonly DebuggerService debuggerService;
+        private readonly VariableViewService variableViewService;
+        private readonly RoutineService routineService;
 
         private readonly IndexedVariableViewModel[] locals;
 
@@ -20,7 +24,9 @@ namespace ZDebug.UI.ViewModel
         [ImportingConstructor]
         public LocalsViewModel(
             StoryService storyService,
-            DebuggerService debuggerService)
+            DebuggerService debuggerService,
+            VariableViewService variableViewService,
+            RoutineService routineService)
             : base("LocalsView")
         {
             this.storyService = storyService;
@@ -31,6 +37,11 @@ namespace ZDebug.UI.ViewModel
             this.debuggerService.StateChanged += DebuggerService_StateChanged;
             this.debuggerService.Stepped += DebuggerService_ProcessorStepped;
 
+            this.variableViewService = variableViewService;
+            variableViewService.LocalViewChanged += VariableViewService_LocalViewChanged;
+
+            this.routineService = routineService;
+
             this.locals = new IndexedVariableViewModel[15];
 
             for (int i = 0; i < 15; i++)
@@ -40,6 +51,25 @@ namespace ZDebug.UI.ViewModel
 
             this.stack = new VariableViewModel[0];
             this.reversedStack = new VariableViewModel[0];
+
+            SetVariableViewCommand = RegisterCommand<KeyValuePair<VariableViewModel, VariableView>>(
+                text: "Set Variable View",
+                name: "SetVariableView",
+                executed: SetVariableViewExecuted,
+                canExecute: CanSetVariableViewExecute);
+        }
+
+        private void VariableViewService_LocalViewChanged(object sender, LocalViewChangedArgs e)
+        {
+            var processor = debuggerService.Machine;
+            if (storyService.IsStoryOpen && processor != null)
+            {
+                var routine = routineService.RoutineTable.GetByAddressWithin(processor.PC);
+                if (routine.Address == e.Address)
+                {
+                    locals[e.Index].VariableView = e.NewView;
+                }
+            }
         }
 
         private void Update()
@@ -59,6 +89,9 @@ namespace ZDebug.UI.ViewModel
                     {
                         local.IsModified = local.Value != processor.Locals[i] && local.Visible == visible;
                         local.Value = processor.Locals[i];
+                        var routine = routineService.RoutineTable.GetByAddressWithin(processor.PC);
+                        var variableView = variableViewService.GetViewForLocal(routine, i);
+                        local.VariableView = variableView;
                     }
 
                     local.Visible = visible;
@@ -128,6 +161,20 @@ namespace ZDebug.UI.ViewModel
             PropertyChanged("HasStory");
         }
 
+        private bool CanSetVariableViewExecute(KeyValuePair<VariableViewModel, VariableView> parameter)
+        {
+            return true;
+        }
+
+        private void SetVariableViewExecuted(KeyValuePair<VariableViewModel, VariableView> parameter)
+        {
+            var viewModel = (IndexedVariableViewModel)parameter.Key;
+            var view = parameter.Value;
+            var processor = debuggerService.Machine;
+            var routine = routineService.RoutineTable.GetByAddressWithin(processor.PC);
+            variableViewService.SetViewForLocal(routine, viewModel.Index, view);
+        }
+
         public IndexedVariableViewModel[] Locals
         {
             get { return locals; }
@@ -141,6 +188,11 @@ namespace ZDebug.UI.ViewModel
         public bool HasStory
         {
             get { return storyService.IsStoryOpen; }
+        }
+
+        public ICommand SetVariableViewCommand
+        {
+            get; private set;
         }
     }
 }

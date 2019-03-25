@@ -1,8 +1,16 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="clr-namespace:ZDebug.UI.ViewModel"
-             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-
+             xmlns:vm="clr-namespace:ZDebug.UI.ViewModel;assembly=ZDebug.UI.Core"
+             xmlns:ui="clr-namespace:ZDebug.UI.Services"
+             Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+             vm:ViewModelBase.RegisterViewModelCommands="{Binding}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ZDebug.UI;component/Views/ContextMenus.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.Style>
             <Style TargetType="Grid">
@@ -25,8 +33,8 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal"
                                 TextElement.FontFamily="Consolas"
-                                Margin="8,0,0,0">
-
+                                Margin="8,0,0,0"
+                                ContextMenu="{DynamicResource VariableViewContextMenu}">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -40,7 +48,7 @@
 
                         <TextBlock Text="{Binding Index, StringFormat=L\{0:x2\}:}" Foreground="{StaticResource grayBrush}" Margin="0,0,8,0"/>
 
-                        <TextBlock Text="{Binding Value, StringFormat=\{0:x4\}}">
+                        <TextBlock Text="{Binding DisplayValue}">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Foreground" Value="Black"/>
