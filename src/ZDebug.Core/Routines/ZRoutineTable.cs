@@ -77,6 +77,14 @@ namespace ZDebug.Core.Routines
             return routines.TryGetValue(address, out routine);
         }
 
+        /** Finds the ZRoutine with the closest starting address to the given address. */
+        public ZRoutine GetByAddressWithin(int address)
+        {
+            var indexComplement = sortedAddresses.BinarySearch(address);
+            var index = indexComplement >= 0 ? indexComplement : ~indexComplement - 1;
+            return routines[sortedAddresses[index]];
+        }
+
         public ZRoutine this[int index]
         {
             get { return routines[sortedAddresses[index]]; }
