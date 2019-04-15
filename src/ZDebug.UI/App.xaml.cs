@@ -30,6 +30,14 @@ namespace ZDebug.UI
 
             this.MainWindow = mainWindowViewModel.CreateView();
             this.MainWindow.Show();
+
+            // Handle command line arguments
+            var commandLineArgumentsService = GetService<CommandLineArgumentsService>();
+            var shouldContinue = commandLineArgumentsService.HandleArguments(e);
+            if (!shouldContinue)
+            {
+                Shutdown();
+            }
         }
 
         public new static App Current
