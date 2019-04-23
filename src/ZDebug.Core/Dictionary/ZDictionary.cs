@@ -13,6 +13,7 @@ namespace ZDebug.Core.Dictionary
         private readonly Story story;
         private readonly ZText ztext;
         private readonly int address;
+        private readonly int entryStride;
 
         private readonly ReadOnlyCollection<char> wordSeparators;
 
@@ -45,6 +46,8 @@ namespace ZDebug.Core.Dictionary
                 var entryZText = ztext.ZWordsAsString(entryZWords, ZTextFlags.All);
                 entries.Add(new ZDictionaryEntry(entryAddress, i, entryZWords, entryZText, entryData));
             }
+
+            entryStride = zwordsSize * 2 + dataSize;
         }
 
         public bool TryLookupWord(string word, out ushort address)
@@ -61,6 +64,37 @@ namespace ZDebug.Core.Dictionary
 
             address = 0;
             return false;
+        }
+
+        public int FirstEntryAddress
+        {
+            get
+            {
+                return entries[0].Address;
+            }
+        }
+
+        public int EntryStride
+        {
+            get
+            {
+                return entryStride;
+            }
+        }
+
+        public ZDictionaryEntry GetEntryFromAddress(ushort address)
+        {
+            int index = (address - FirstEntryAddress) / EntryStride;
+            int remainder = (address - FirstEntryAddress) % EntryStride;
+            if (remainder != 0)
+            {
+                return null;
+            }
+            if (index < 0 || index >= entries.Count)
+            {
+                return null;
+            }
+            return entries[index];
         }
 
         public ReadOnlyCollection<char> WordSeparators
