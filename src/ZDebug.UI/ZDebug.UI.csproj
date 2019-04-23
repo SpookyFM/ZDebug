@@ -6,10 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\ContextMenus - Copy.xaml" />
+    <None Remove="Views\ContextMenus.xaml" />
+    <None Remove="Views\DictionaryView.xaml" />
+    <None Remove="Views\LocalsView.xaml" />
     <None Remove="Views\MainWindowView.xaml" />
+    <None Remove="Views\UserControl1 - Copy.xaml" />
+    <None Remove="Views\UserControl1.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Views\LocalsView.xaml" />
     <EmbeddedResource Include="Views\MainWindowView.xaml" />
   </ItemGroup>
 
@@ -38,6 +45,21 @@
     <ApplicationDefinition Include="App.xaml" Subtype="Designer" Generator="MSBuild:UpdateDesignTimeXaml" />
     <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:UpdateDesignTimeXaml" Exclude="App.xaml" />
     <Compile Update="**\*.xaml.cs" SubType="Designer" DependentUpon="%(Filename)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\ContextMenus - Copy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\ContextMenus.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\UserControl1 - Copy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Views\UserControl1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
 </Project>

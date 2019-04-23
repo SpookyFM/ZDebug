@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using ZDebug.Core.Basics;
 using ZDebug.UI.ViewModel;
 
@@ -16,6 +17,10 @@ namespace ZDebug.UI.Services
         public static VariableView ObjectViewAddress { get; }
         public static VariableView ObjectViewNumber { get; }
         public static VariableView FunctionView { get; }
+        public static VariableView ParseEntryView { get; }
+        public static VariableView ParseBufferView { get; }
+        public static VariableView DictionaryEntryView { get; }
+        public static VariableView TableView { get; }
 
         static VariableViews()
         {
@@ -89,6 +94,103 @@ namespace ZDebug.UI.Services
                 var zObject = objectTable[value - 1];
                 return zObject.Number.ToString() + ": " + zObject.ShortName;
             });
+
+            ParseEntryView = new VariableView("pe", "Parse entry", (value, memory) =>
+            {
+                // Each block consists of the byte address of the word in the dictionary, if it is in the dictionary, or 0 if it isn't; followed by a byte giving the number of letters in the word; and finally a byte giving the position in the text-buffer of the first letter of the word.
+                // First two bytes are the dictionary entry
+
+                ushort currentPosition = value;
+                ushort dictionaryEntry = BitConverter.ToUInt16(memory, currentPosition);
+                currentPosition += 2;
+                byte numLetters = memory[currentPosition++];
+                byte position = memory[currentPosition++];
+
+                var word = StringView.ConvertToString(dictionaryEntry, memory);
+
+                return word + " - " + numLetters + " - " + position;
+            });
+
+            ParseBufferView = new VariableView("pb", "Parse buffer", (value, memory) =>
+            {
+                var storyService = App.Current.GetService<StoryService>();
+                if (storyService == null)
+                {
+                    return "----";
+                }
+                if (!storyService.IsStoryOpen)
+                {
+                    return "----";
+                }
+                var dictionary = storyService.Story.Dictionary;
+
+                //  The number of words is written in byte 1 and one 4-byte block is written for each word, from byte 2 onwards (except that it should stop before going beyond the maximum number of words specified). 
+                ushort currentPosition = value;
+                byte maxNumWords = memory[currentPosition++];
+                byte numWords = memory[currentPosition++];
+
+                StringBuilder builder = new StringBuilder();
+                builder.Append(maxNumWords + " - " + numWords + ": ");
+
+                var memoryReader = new MemoryReader(memory, currentPosition);
+
+                for (int i = 0; i < numWords; i++)
+                {
+                    // First two bytes are the dictionary entry
+                    ushort dictionaryEntryAddress = memoryReader.NextWord();
+                    var dictionaryEntry = dictionary.GetEntryFromAddress(dictionaryEntryAddress);
+
+                    byte numLetters = memoryReader.NextByte();
+                    byte position = memoryReader.NextByte();
+
+                    var word = dictionaryEntry != null ? dictionaryEntry.ZText : "---";
+
+                    builder.Append(word + "(" + numLetters + ", " + position + ")");
+
+                }
+                return builder.ToString();
+            });
+
+            DictionaryEntryView = new VariableView("de", "Dictionary entry", (value, memory) =>
+            {
+                var storyService = App.Current.GetService<StoryService>();
+                if (storyService == null)
+                {
+                    return "----";
+                }
+                if (!storyService.IsStoryOpen)
+                {
+                    return "----";
+                }
+                var dictionary = storyService.Story.Dictionary;
+                var entry = dictionary.GetEntryFromAddress(value);
+                if (entry != null)
+                {
+                    var byteStrings = Array.ConvertAll(entry.Data, b => b.ToString("x2"));
+                    var dataString = string.Join(" ", byteStrings);
+                    return entry.ZText + "[" + dataString + "]";
+                } else
+                {
+                    return "----";
+                }
+            });
+
+            TableView = new VariableView("table", "Table view", (value, memory) =>
+            {
+                int NumEntries = 10;
+                var reader = new MemoryReader(memory, value);
+                var words = new List<String>();
+
+                for (var i = 0; i < NumEntries; i++)
+                {
+                    var currentWord = reader.NextWord();
+                    var word = StringView.ConvertToString(currentWord, memory);
+                    words.Add(word);
+                }
+                return string.Join(",", words);
+            });
+
+
 
             FunctionView = new VariableView("func", "Function view", (value, memory) =>
             {

@@ -12,10 +12,10 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-
+        <!-- TODO: Lots of copy & paste from ObjectsView.xaml -->
         <ListView
-            Name="listObjects"
-            ItemsSource="{Binding Objects}"
+            Name="listDictionary"
+            ItemsSource="{Binding Entries}"
             VirtualizingStackPanel.VirtualizationMode="Recycling"
             HorizontalContentAlignment="Stretch"
             BorderBrush="Transparent"
@@ -91,14 +91,11 @@
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="100"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
@@ -114,100 +111,25 @@
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{Binding Number, Mode=OneWay}"/>
+                                    Text="{Binding Index, Mode=OneWay}"/>
                             </Border>
 
                             <TextBlock
                                 Grid.Column="1" 
                                 Grid.Row="0" 
                                 FontWeight="Bold"
-                                Text="{Binding ShortName, Mode=OneWay}"/>
-
-                            <Grid
-                                Grid.Column="1"
-                                Grid.Row="1"
-                                Margin="0,4,0,4">
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="75"/>
-                                    <ColumnDefinition Width="75"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Grid.Column="0">
-
-                                    <Run Text="Parent: "/>
-
-                                    <Hyperlink
-                                        Command="{Binding ElementName=listObjects, Path=DataContext.NavigateCommand}"
-                                        CommandParameter="{Binding Parent}"
-                                        Style="{StaticResource HyperlinkStyle}">
-                                    
-                                        <Run Text="{Binding Parent, Mode=OneWay}"/>
-                                    </Hyperlink>
-                                </TextBlock>
-
-                                <TextBlock Grid.Column="1">
-
-                                    <Run Text="Sibling: "/>
-
-                                    <Hyperlink
-                                        Command="{Binding ElementName=listObjects, Path=DataContext.NavigateCommand}"
-                                        CommandParameter="{Binding Sibling}"
-                                        Style="{StaticResource HyperlinkStyle}">
-
-                                        <Run Text="{Binding Sibling, Mode=OneWay}"/>
-                                    </Hyperlink>
-                                </TextBlock>
-
-                                <TextBlock Grid.Column="2">
-
-                                    <Run Text="Child: "/>
-
-                                    <Hyperlink
-                                        Command="{Binding ElementName=listObjects, Path=DataContext.NavigateCommand}"
-                                        CommandParameter="{Binding Child}"
-                                        Style="{StaticResource HyperlinkStyle}">
-
-                                        <Run Text="{Binding Child, Mode=OneWay}"/>
-                                    </Hyperlink>
-                                </TextBlock>
-
-                            </Grid>
-
+                                Text="{Binding ZText, Mode=OneWay}"/>
+                            
                             <TextBlock
-                                Grid.Column="1"
+                                Grid.Column="2"
                                 Grid.Row="2"
-                                Margin="0,4,0,0">
-
-                                <Run Text="Attributes:"/>
-                                <Run Text="{Binding Attributes, Mode=OneWay}"/>
-                            </TextBlock>
-
-                            <TextBlock
-                                Grid.Column="1"
-                                Grid.Row="3"
-                                Margin="0,4,0,0">
-                                <Run Text="Properties:"/>
-                                <Run Text="{Binding PropertyTableAddress, Mode=OneWay, StringFormat=\{0:x4\}}"/>
-                            </TextBlock>
-
-                            <ItemsControl
-                                Grid.Column="1"
-                                Grid.Row="4"
-                                Margin="0,4,0,0"
                                 FontFamily="Consolas"
-                                ItemsSource="{Binding Properties}">
+                                Margin="0,4,0,0">
 
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock ContextMenu="{DynamicResource PropertyViewContextMenu}">
-                                            <Run Text="["/><Run Text="{Binding Number, Mode=OneWay, StringFormat=\{0\,2\}}"/><Run Text="]"/>
-                                            <Run Text="{Binding DataDisplayText, Mode=OneWay}"/>
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                                <Run Text="Data:"/>
+                                <Run Text="{Binding DataString, Mode=OneWay}"/>
+                            </TextBlock>
+
                         </Grid>
                     </Border>
 

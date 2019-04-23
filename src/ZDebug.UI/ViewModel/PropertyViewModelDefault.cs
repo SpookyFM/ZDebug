@@ -4,18 +4,23 @@ using ZDebug.UI.Services;
 
 namespace ZDebug.UI.ViewModel
 {
-    internal sealed class PropertyViewModel : PropertyViewModelBase
+    internal sealed class PropertyViewModelDefault : PropertyViewModelBase
     {
-        private readonly ZProperty property;
 
-        public PropertyViewModel(ZProperty property)
+        private readonly int number;
+        private readonly byte[] value;
+
+        public PropertyViewModelDefault(int number)
         {
-            this.property = property;
+            this.number = number;
+            var storyService = App.Current.GetService<StoryService>();
+            var defaultValue = storyService.Story.ObjectTable.GetPropertyDefault(Number);
+            value = BitConverter.GetBytes(defaultValue);
         }
 
         public override int Number
         {
-            get { return this.property.Number; }
+            get { return number; }
         }
 
         public string DataDisplayText
@@ -25,14 +30,14 @@ namespace ZDebug.UI.ViewModel
                 var propertyViewService = App.Current.GetService<PropertyViewService>();
                 var propertyView = propertyViewService.GetViewForProperty(Number);
 
+                
                 if (propertyView == null)
                 {
                     propertyView = PropertyViews.HexadecimalView;
                 }
 
                 var storyService = App.Current.GetService<StoryService>();
-                byte[] bytes= property.ReadAsBytes();
-                return propertyView.ConvertToString(bytes, storyService.Story.Memory);
+                return propertyView.ConvertToString(value, storyService.Story.Memory);
             }
         }
     }

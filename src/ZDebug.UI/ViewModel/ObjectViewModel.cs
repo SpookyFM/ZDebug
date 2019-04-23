@@ -1,25 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ZDebug.Core.Objects;
+using ZDebug.UI.Services;
 
 namespace ZDebug.UI.ViewModel
 {
-    internal sealed class ObjectViewModel : ViewModelBase
+    internal sealed class ObjectViewModel : ObjectViewModelBase
     {
         private readonly ZObject obj;
-        private readonly ReadOnlyCollection<PropertyViewModel> properties;
+        private readonly ReadOnlyCollection<PropertyViewModelBase> properties;
 
         public ObjectViewModel(ZObject obj)
         {
             this.obj = obj;
 
-            var props = new List<PropertyViewModel>();
+            var props = new List<PropertyViewModelBase>();
             foreach (var prop in obj.PropertyTable)
             {
                 props.Add(new PropertyViewModel(prop));
             }
 
-            properties = new ReadOnlyCollection<PropertyViewModel>(props);
+            properties = new ReadOnlyCollection<PropertyViewModelBase>(props);
         }
 
         public int Number
@@ -78,7 +79,7 @@ namespace ZDebug.UI.ViewModel
             get { return obj.PropertyTable.Address; }
         }
 
-        public ReadOnlyCollection<PropertyViewModel> Properties
+        public ReadOnlyCollection<PropertyViewModelBase> Properties
         {
             get { return properties; }
         }

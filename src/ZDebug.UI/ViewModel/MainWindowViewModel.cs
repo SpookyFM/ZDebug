@@ -23,6 +23,7 @@ namespace ZDebug.UI.ViewModel
         private readonly GlobalsViewModel globalsViewModel;
         private readonly DisassemblyViewModel disassemblyViewModel;
         private readonly ObjectsViewModel objectsViewModel;
+        private readonly DictionaryViewModel dictionaryViewModel;
         private readonly LocalsViewModel localsViewModel;
         private readonly CallStackViewModel callStackViewModel;
         private readonly OutputViewModel outputViewModel;
@@ -42,6 +43,7 @@ namespace ZDebug.UI.ViewModel
             GlobalsViewModel globalsViewModel,
             DisassemblyViewModel disassemblyViewModel,
             ObjectsViewModel objectsViewModel,
+            DictionaryViewModel dictionaryViewModel,
             LocalsViewModel localsViewModel,
             CallStackViewModel callStackViewModel,
             OutputViewModel outputViewModel,
@@ -64,6 +66,7 @@ namespace ZDebug.UI.ViewModel
             this.globalsViewModel = globalsViewModel;
             this.disassemblyViewModel = disassemblyViewModel;
             this.objectsViewModel = objectsViewModel;
+            this.dictionaryViewModel = dictionaryViewModel;
             this.localsViewModel = localsViewModel;
             this.callStackViewModel = callStackViewModel;
             this.outputViewModel = outputViewModel;
@@ -328,6 +331,9 @@ namespace ZDebug.UI.ViewModel
 
             var objectsContent = this.View.FindName<DocumentContent>("objectsContent");
             objectsContent.Content = this.objectsViewModel.CreateView();
+
+            var dictionaryContent = this.View.FindName<DocumentContent>("dictionaryContent");
+            dictionaryContent.Content = this.dictionaryViewModel.CreateView();
 
             //var memoryContent = this.View.FindName<DocumentContent>("memoryContent");
             //memoryContent.Content = ViewModelWithView.Create<MemoryViewModel, UserControl>();
