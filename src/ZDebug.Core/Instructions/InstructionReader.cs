@@ -140,6 +140,14 @@ namespace ZDebug.Core.Instructions
             return (byte)(opByte & 0x1f);
         }
 
+        public Instruction PeekNextInstruction()
+        {
+            var oldAddress = address;
+            var temp = NextInstruction();
+            address = oldAddress;
+            return temp;
+        }
+
         public Instruction NextInstruction()
         {
             var startAddress = address;
