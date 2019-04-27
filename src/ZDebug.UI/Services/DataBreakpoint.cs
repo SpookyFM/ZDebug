@@ -22,12 +22,18 @@ namespace ZDebug.UI.Services
 
         public int Address
         {
-            get;
+            get
+            {
+                return address;
+            }
         }
 
         public int Length
         {
-            get;
+            get
+            {
+                return length;
+            }
         }
 
 

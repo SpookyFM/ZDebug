@@ -209,7 +209,8 @@ namespace ZDebug.UI.ViewModel
             oldLine.HasIP = false;
 
             if (debuggerService.State == DebuggerState.AwaitingInput ||
-                debuggerService.State == DebuggerState.Done)
+                debuggerService.State == DebuggerState.Done ||
+                debuggerService.IsSteppingOverOrOut)
             {
                 return;
             }
@@ -218,6 +219,8 @@ namespace ZDebug.UI.ViewModel
             newLine.HasIP = true;
 
             BringLineIntoView(newLine);
+            var lineString = newLine.ToString();
+            System.Console.WriteLine(lineString);
             UpdateStackLines();
         }
 

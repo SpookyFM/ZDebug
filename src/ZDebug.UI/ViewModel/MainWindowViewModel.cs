@@ -116,12 +116,26 @@ namespace ZDebug.UI.ViewModel
                 canExecute: CanStopDebuggingExecute,
                 inputGestures: new KeyGesture(Key.F5, ModifierKeys.Shift));
 
-            this.StepNextCommand = RegisterCommand(
-                text: "StepNext",
-                name: "Step to Next Instruction",
-                executed: StepNextExecuted,
-                canExecute: CanStepNextExecute,
+            this.StepIntoCommand = RegisterCommand(
+                text: "StepInto",
+                name: "Step Into",
+                executed: StepIntoExecuted,
+                canExecute: CanStepIntoExecute,
+                inputGestures: new KeyGesture(Key.F11));
+
+            this.StepOverCommand = RegisterCommand(
+                text: "StepOver",
+                name: "Step Over",
+                executed: StepOverExecuted,
+                canExecute: CanStepOverExecute,
                 inputGestures: new KeyGesture(Key.F10));
+
+            this.StepOutCommand = RegisterCommand(
+                text: "StepOut",
+                name: "Step Out",
+                executed: StepOutExecuted,
+                canExecute: CanStepOutExecute,
+                inputGestures: new KeyGesture(Key.F11, ModifierKeys.Shift));
 
             this.ResetSessionCommand = RegisterCommand(
                 text: "ResetSession",
@@ -226,14 +240,34 @@ namespace ZDebug.UI.ViewModel
             debuggerService.StopDebugging();
         }
 
-        private bool CanStepNextExecute()
+        private bool CanStepIntoExecute()
         {
-            return debuggerService.CanStepNext;
+            return debuggerService.CanStepInto;
         }
 
-        private void StepNextExecuted()
+        private void StepIntoExecuted()
         {
-            debuggerService.StepNext();
+            debuggerService.StepInto();
+        }
+
+        private bool CanStepOverExecute()
+        {
+            return debuggerService.CanStepOver;
+        }
+
+        private void StepOverExecuted()
+        {
+            debuggerService.StepOver();
+        }
+
+        private bool CanStepOutExecute()
+        {
+            return debuggerService.CanStepOut;
+        }
+
+        private void StepOutExecuted()
+        {
+            debuggerService.StepOut();
         }
 
         private bool CanResetSessionExecute()
@@ -284,7 +318,9 @@ namespace ZDebug.UI.ViewModel
         public ICommand ExitCommand { get; private set; }
         public ICommand StartDebuggingCommand { get; private set; }
         public ICommand StopDebuggingCommand { get; private set; }
-        public ICommand StepNextCommand { get; private set; }
+        public ICommand StepIntoCommand { get; private set; }
+        public ICommand StepOverCommand { get; private set; }
+        public ICommand StepOutCommand { get; private set; }
         public ICommand ResetSessionCommand { get; private set; }
         public ICommand ResetWindowLayoutCommand { get; private set; }
         public ICommand AboutGameCommand { get; private set; }

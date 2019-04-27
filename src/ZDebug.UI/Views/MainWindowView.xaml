@@ -56,9 +56,19 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Command="{Binding StepNextCommand}" Header="Step _Next">
+                <MenuItem Command="{Binding StepIntoCommand}" Header="Step _Into">
                     <MenuItem.Icon>
-                        <c:AutoDisableImage Source="{StaticResource stepImage}"/>
+                        <c:AutoDisableImage Source="{StaticResource stepInImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding StepOverCommand}" Header="Step _Over">
+                    <MenuItem.Icon>
+                        <c:AutoDisableImage Source="{StaticResource stepOverImage}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding StepOutCommand}" Header="Step _Out">
+                    <MenuItem.Icon>
+                        <c:AutoDisableImage Source="{StaticResource stepOutImage}"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
@@ -86,8 +96,14 @@
                     <c:AutoDisableImage Source="{StaticResource stopImage}"/>
                 </Button>
                 <Separator/>
-                <Button Command="{Binding StepNextCommand}" ToolTip="Step to Next Instruction">
-                    <c:AutoDisableImage Source="{StaticResource stepImage}"/>
+                <Button Command="{Binding StepIntoCommand}" ToolTip="Step Into">
+                    <c:AutoDisableImage Source="{StaticResource stepInImage}"/>
+                </Button>
+                <Button Command="{Binding StepOverCommand}" ToolTip="Step Over">
+                    <c:AutoDisableImage Source="{StaticResource stepOverImage}"/>
+                </Button>
+                <Button Command="{Binding StepOutCommand}" ToolTip="Step Out">
+                    <c:AutoDisableImage Source="{StaticResource stepOutImage}"/>
                 </Button>
                 <Separator/>
                 <Button Command="{Binding ResetSessionCommand}" ToolTip="Reset Debugging Session">
