@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using ZDebug.Core.Instructions;
 using ZDebug.Core.Text;
@@ -45,7 +47,6 @@ namespace ZDebug.UI.Controls
             {
                 RefreshInstruction();
             }
-
             return builder.Measure(availableSize.Width);
         }
 
@@ -195,6 +196,47 @@ namespace ZDebug.UI.Controls
             }
 
             update = false;
+        }
+
+        protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
+        {
+            var position = e.GetPosition(this);
+            var line = builder.Lines[0] ?? null;
+            if (line != null)
+            {
+                var hit = line.GetCharacterHitFromDistance(position.X);
+                int index = hit.FirstCharacterIndex;
+                var tag = builder.GetTagFromIndex(index);
+                var tagString = "NULL";
+                if (tag != null) {
+                    tagString = tag.ToString();
+                }
+                ToolTipService.SetIsEnabled(this, true);
+                this.ToolTip = tag;
+                
+            }
+            e.Handled = true;
+        }
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            var position = e.GetPosition(this);
+            var line = builder.Lines[0] ?? null;
+            if (line != null)
+            {
+                var hit = line.GetCharacterHitFromDistance(position.X);
+                int index = hit.FirstCharacterIndex;
+                var tag = builder.GetTagFromIndex(index);
+                var tagString = "NULL";
+                if (tag != null)
+                {
+                    tagString = tag.ToString();
+                }
+                ToolTipService.SetIsEnabled(this, true);
+                this.ToolTip = tag;
+
+            }
+            e.Handled = true;
         }
 
         public Instruction Instruction

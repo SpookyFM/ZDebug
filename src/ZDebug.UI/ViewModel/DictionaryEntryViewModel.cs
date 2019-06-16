@@ -44,9 +44,9 @@ namespace ZDebug.UI.ViewModel
             byte targetByte = entry.Data[test.ByteToApplyTo];
             byte bitmap = test.Bitmap;
             bool result = (bitmap & targetByte) == bitmap;
-            //return true;
+            return true;
             // return result;
-            return entry.Data[test.ByteToApplyTo] == bitmap;
+            // return entry.Data[test.ByteToApplyTo] == bitmap;
         }
     }
 }

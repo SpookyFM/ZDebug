@@ -66,14 +66,29 @@ namespace ZDebug.UI.ViewModel
 
         private void StoryService_StoryOpened(object sender, StoryOpenedEventArgs e)
         {
+            var unusedProperties = new List<int>();
+            for (var i = 0; i < 64; i++)
+            {
+                unusedProperties.Add(i);
+            }
             objects.BeginBulkOperation();
             try
             {
                 // Add one for the default object
                 objects.Add(new ObjectViewModelDefault());
+                byte? propertyToTest = null; // 0x30;
                 foreach (var obj in e.Story.ObjectTable)
                 {
-                    objects.Add(new ObjectViewModel(obj));
+                    for (var i = 0; i < 64; i++)
+                    {
+                        if (obj.PropertyTable.GetByNumber(i) != null) {
+                            unusedProperties.Remove(i);
+                        }
+                    }
+                    if (!propertyToTest.HasValue || obj.PropertyTable.GetByNumber(propertyToTest ?? 0) != null)
+                    {
+                        objects.Add(new ObjectViewModel(obj));
+                    }
                 }
             }
             finally

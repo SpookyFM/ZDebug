@@ -22,6 +22,9 @@ namespace ZDebug.UI.Services
         private bool stopping;
         private bool hasStepped;
 
+        // Expected PC for stepping over or out - acts like a breakpoint
+        private int? expectedPC;
+
         private InterpretedZMachine machine;
         private InstructionReader reader;
         private Instruction currentInstruction;
@@ -49,6 +52,9 @@ namespace ZDebug.UI.Services
         {
             DebuggerState oldState = state;
             state = newState;
+
+            // In case we were waiting to reach a step out or over, we'll remove it
+            expectedPC = null;
 
             var handler = StateChanged;
             if (handler != null)
@@ -168,6 +174,18 @@ namespace ZDebug.UI.Services
                 {
                     int newPC = Step();
 
+                    if (machine.ShouldBreak)
+                    {
+                        ChangeState(DebuggerState.Stopped);
+                        machine.ShouldBreak = false;
+                    }
+
+                    if (storyService.Story.printTriggered)
+                    {
+                        ChangeState(DebuggerState.Stopped);
+                        storyService.Story.printTriggered = false;
+                    }
+
                     if (stopping)
                     {
                         stopping = false;
@@ -181,6 +199,11 @@ namespace ZDebug.UI.Services
 
                     var allTriggeredDataBreakpoints = dataBreakpointService.UpdateAllBreakpoints(storyService.Story.Memory);
                     if (allTriggeredDataBreakpoints.Count() > 0)
+                    {
+                        // ChangeState(DebuggerState.Stopped);
+                    }
+
+                    if ((expectedPC ?? -1) == newPC)
                     {
                         ChangeState(DebuggerState.Stopped);
                     }
@@ -217,12 +240,12 @@ namespace ZDebug.UI.Services
             stopping = true;
         }
 
-        public bool CanStepNext
+        public bool CanStepInto
         {
             get { return state == DebuggerState.Stopped; }
         }
 
-        public void StepNext()
+        public void StepInto()
         {
             try
             {
@@ -233,6 +256,57 @@ namespace ZDebug.UI.Services
                 currentException = ex;
                 ChangeState(DebuggerState.StoppedAtError);
             }
+        }
+
+        public bool CanStepOver
+        {
+            get { return state == DebuggerState.Stopped; }
+        }
+
+        public void StepOver()
+        {
+            // If the next instruction is a call, we have to debug until we are back
+            int currentPC = machine.PC;
+            reader.Address = currentPC;
+            try
+            {
+                var nextInstruction = reader.PeekNextInstruction();
+                if (nextInstruction.Opcode.IsCall)
+                {
+                    expectedPC = nextInstruction.Address + nextInstruction.Length;
+                    StartDebugging();
+                } else
+                {
+                    Step();
+                }                
+            }
+            catch (Exception ex)
+            {
+                currentException = ex;
+                ChangeState(DebuggerState.StoppedAtError);
+            }
+        }
+
+        public bool CanStepOut
+        {
+            get {
+                return state == DebuggerState.Stopped && machine?.GetStackFrameCount() > 1;
+            }
+        }
+
+        public void StepOut()
+        {
+            var stackFrameCount = machine.GetStackFrameCount();
+            if (stackFrameCount == 1)
+            {
+                return;
+            }
+            // We have to check if we are inside a function, if so, we have to debug until we have returned
+            var topmostStackFrame = machine.GetStackFrame(0);
+
+            expectedPC = (int) topmostStackFrame.ReturnAddress;
+
+            StartDebugging();
         }
 
         public bool CanResetSession
@@ -289,6 +363,11 @@ namespace ZDebug.UI.Services
         public DebuggerState State
         {
             get { return state; }
+        }
+
+        public bool IsSteppingOverOrOut
+        {
+            get { return expectedPC.HasValue; }
         }
 
         public InterpretedZMachine Machine

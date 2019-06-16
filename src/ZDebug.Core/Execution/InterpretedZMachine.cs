@@ -656,5 +656,11 @@ namespace ZDebug.Core.Execution
         public event EventHandler<StackFrameEventArgs> ExitStackFrame;
 
         public event EventHandler Quit;
+
+        public bool ShouldBreak
+        {
+            get;
+            set;
+        }
     }
 }

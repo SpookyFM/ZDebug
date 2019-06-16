@@ -24,6 +24,10 @@ namespace ZDebug.UI.Services
 
         private void StoryService_StoryOpened(object sender, StoryOpenedEventArgs e)
         {
+            // Temporary one for finding out when G96 is written to
+            var address = e.Story.GlobalVariablesTable[0x96];
+            Add(address, 4, e.Story.Memory);
+
             // Update all breakpoints as we might have created them before we had memory to load their initial values from
             UpdateAllBreakpoints(e.Story.Memory);
         }
@@ -114,7 +118,8 @@ namespace ZDebug.UI.Services
 
         void IPersistable.Load(XElement xml)
         {
-            breakpoints.Clear();
+            // TODO: Re-enable, this would overwrite one I manually created
+            // breakpoints.Clear();
 
             var bpsElem = xml.Element("dataBreakpoints");
             if (bpsElem != null)
@@ -123,7 +128,8 @@ namespace ZDebug.UI.Services
                 {
                     var addAttr = bpElem.Attribute("address");
                     var lengthAttr = bpElem.Attribute("length");
-                    Add((int)addAttr, (int)lengthAttr);
+                    // TODO: Re-enable, this would overwrite one I manually created
+                    // Add((int)addAttr, (int)lengthAttr);
                 }
             }
         }

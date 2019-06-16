@@ -11,17 +11,20 @@ namespace ZDebug.UI.Controls
     {
         private class InstructionTextSource : TextSource
         {
-            private struct FormattedSpan
+            public struct FormattedSpan
             {
                 public readonly int Start;
                 public readonly int Length;
                 public readonly SimpleTextRunProperties Format;
 
-                public FormattedSpan(int start, int length, SimpleTextRunProperties format)
+                public readonly object Tag;
+
+                public FormattedSpan(int start, int length, SimpleTextRunProperties format, object tag)
                 {
                     this.Start = start;
                     this.Length = length;
                     this.Format = format;
+                    this.Tag = tag;
                 }
             }
 
@@ -31,7 +34,7 @@ namespace ZDebug.UI.Controls
             private readonly StringBuilder textBuilder = new StringBuilder();
             private readonly List<FormattedSpan> spans = new List<FormattedSpan>();
 
-            public void Add(string text, FontAndColorSetting format)
+            public void Add(string text, FontAndColorSetting format, object tag)
             {
                 SimpleTextRunProperties props;
                 if (!propMap.TryGetValue(format.GetHashCode(), out props))
@@ -40,7 +43,7 @@ namespace ZDebug.UI.Controls
                     propMap.Add(format.GetHashCode(), props);
                 }
 
-                var span = new FormattedSpan(textBuilder.Length, text.Length, props);
+                var span = new FormattedSpan(textBuilder.Length, text.Length, props, tag);
 
                 textBuilder.Append(text);
                 spans.Add(span);
@@ -82,6 +85,16 @@ namespace ZDebug.UI.Controls
                 }
 
                 return new TextEndOfParagraph(1);
+            }
+
+            public FormattedSpan? GetSpan(int textSourceCharacterIndex)
+            {
+                if (textSourceCharacterIndex < textBuilder.Length)
+                {
+                    var span = spans.Find(s => s.Start <= textSourceCharacterIndex && s.Start + s.Length > textSourceCharacterIndex);
+                    return span;
+                }
+                return null;
             }
 
             public TextRunCache Cache

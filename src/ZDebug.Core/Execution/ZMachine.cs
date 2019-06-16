@@ -5,6 +5,26 @@ using ZDebug.Core.Text;
 
 namespace ZDebug.Core.Execution
 {
+    public class AccessMemory
+    {
+        public byte[] Memory;
+
+        public byte this[int i]
+        {
+            get
+            {
+                return Memory[i];
+            }
+            set
+            {
+                Memory[i] = value;
+            }
+        }
+
+
+    }
+
+
     public abstract partial class ZMachine
     {
         public readonly byte Version;
@@ -12,6 +32,7 @@ namespace ZDebug.Core.Execution
 
         protected readonly Story Story;
         protected readonly byte[] Memory;
+        //protected readonly AccessMemory Memory;
         protected readonly ZText ZText;
 
         protected readonly OutputStreamCollection OutputStreams;
@@ -25,6 +46,8 @@ namespace ZDebug.Core.Execution
         {
             this.Story = story;
             this.Memory = story.Memory;
+            //this.Memory = new AccessMemory();
+            // this.Memory = story.Memory;
             this.Version = story.Version;
             this.ZText = new ZText(this.Memory);
 

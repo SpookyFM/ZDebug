@@ -35,6 +35,8 @@ namespace ZDebug.Core
 
         private IInterpreter interpreter;
 
+        public bool printTriggered;
+
         private Story(byte[] memory)
         {
             this.memory = memory;

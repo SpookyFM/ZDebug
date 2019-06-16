@@ -97,6 +97,7 @@ namespace ZDebug.Core.Execution
 
             public void Print(string text)
             {
+                story.printTriggered = true;
                 if (memoryStreams.Count > 0)
                 {
                     // If stream 3 is active, only print to that

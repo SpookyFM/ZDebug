@@ -198,6 +198,11 @@ namespace ZDebug.IO.Windows
             KeyEventHandler handler = null;
             handler = (s, e) =>
             {
+                if (e.Key == Key.Up)
+                {
+                    inputTextBox.Text = "Up pressed";
+                }
+
                 if (e.Key != Key.Return)
                 {
                     return;

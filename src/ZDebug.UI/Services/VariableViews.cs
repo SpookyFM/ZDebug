@@ -21,6 +21,7 @@ namespace ZDebug.UI.Services
         public static VariableView ParseBufferView { get; }
         public static VariableView DictionaryEntryView { get; }
         public static VariableView TableView { get; }
+        public static VariableView WorldListView { get; }
 
         static VariableViews()
         {
@@ -188,6 +189,27 @@ namespace ZDebug.UI.Services
                     words.Add(word);
                 }
                 return string.Join(",", words);
+            });
+
+            // This is for something found in Trinity - ideally, something game-specific like this should be implemented as a configurable view
+            WorldListView = new VariableView("wl", "Word list view", (value, memory) =>
+            {
+                var reader = new MemoryReader(memory, value);
+                var maxAddress = reader.NextWord();
+                var currentAddress = reader.NextWord();
+
+                var numEntries = maxAddress - 1;
+                var currentIndex = currentAddress - 2;
+
+                var words = new List<String>();
+
+                for (var i = 0; i < numEntries; i++)
+                {
+                    var currentWord = reader.NextWord();
+                    var word = PackedStringView.ConvertToString(currentWord, memory);
+                    words.Add(word);
+                }
+                return "Index: " + currentIndex + ": " + string.Join(",", words);
             });
 
 

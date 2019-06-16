@@ -248,12 +248,26 @@ namespace ZDebug.Core.Execution
         {
             int address = operandValues[0] + operandValues[1];
 
+            int start = 0xa47f;
+            int end = start + 8;
+            if (address == (start + 0x3))
+            {
+                ShouldBreak = true;
+            }
+
             Store(this.Memory[address]);
         }
 
         internal void op_loadw()
         {
             int address = operandValues[0] + (operandValues[1] * 2);
+
+            int start = 0xa16e;
+            int end = start + 8;
+            if (address >= start && address < end)
+            {
+                ShouldBreak = true;
+            }
 
             Store(this.Memory.ReadWord(address));
         }

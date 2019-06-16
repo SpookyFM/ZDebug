@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.TextFormatting;
@@ -19,17 +20,34 @@ namespace ZDebug.UI.Controls
             private readonly InstructionTextSource textSource;
             private readonly LabelService labelService;
 
+            private List<TextLine> textLines;
+
             public InstructionTextBuilder()
             {
                 this.defaultParagraphProps = new SimpleTextParagraphProperties(FontsAndColorsService.DefaultSetting);
                 this.labelService = App.Current.GetService<LabelService>();
 
                 textSource = new InstructionTextSource();
+                textLines = new List<TextLine>();
+            }
+
+            public object GetTagFromIndex(int index)
+            {
+                var span = textSource.GetSpan(index);
+                return span.Value.Tag;
             }
 
             public void Clear()
             {
                 textSource.Clear();
+            }
+
+            public List<TextLine> Lines
+            {
+                get
+                {
+                    return textLines;
+                }
             }
 
             public Size Measure(double width)
@@ -54,10 +72,12 @@ namespace ZDebug.UI.Controls
                 var top = 0.0;
 
                 int textSourcePosition = 0;
+                textLines.Clear();
                 while (textSourcePosition < textSource.Length)
                 {
                     using (var line = formatter.FormatLine(textSource, textSourcePosition, width, defaultParagraphProps, previousLineBreak: null, textRunCache: textSource.Cache))
                     {
+                        textLines.Add(line);
                         line.Draw(context, new Point(0.0, top), InvertAxes.None);
                         top += line.Height;
                         textSourcePosition += line.Length;
@@ -65,24 +85,24 @@ namespace ZDebug.UI.Controls
                 }
             }
 
-            private void AddText(string text, FontAndColorSetting setting)
+            private void AddText(string text, FontAndColorSetting setting, object tag = null)
             {
                 if (setting == null)
                 {
                     throw new ArgumentNullException("setting");
                 }
 
-                textSource.Add(text, setting);
+                textSource.Add(text, setting, tag);
             }
 
             public void AddAddress(int address)
             {
-                AddText(address.ToString("x4"), FontsAndColorsService.AddressSetting);
+                AddText(address.ToString("x4"), FontsAndColorsService.AddressSetting, address);
             }
 
             public void AddLabel(int label)
             {
-                AddText(label.ToString("\\L00"), FontsAndColorsService.AddressSetting);
+                AddText(label.ToString("\\L00"), FontsAndColorsService.AddressSetting, label);
             }
 
             public void AddBranch(Instruction instruction)
@@ -136,17 +156,17 @@ namespace ZDebug.UI.Controls
 
             public void AddConstant(ushort value)
             {
-                AddText("#" + value.ToString("x4"), FontsAndColorsService.ConstantSetting);
+                AddText("#" + value.ToString("x4"), FontsAndColorsService.ConstantSetting, value);
             }
 
             public void AddConstant(byte value)
             {
-                AddText("#" + value.ToString("x2"), FontsAndColorsService.ConstantSetting);
+                AddText("#" + value.ToString("x2"), FontsAndColorsService.ConstantSetting, value);
             }
 
             public void AddKeyword(string text)
             {
-                AddText(text, FontsAndColorsService.KeywordSetting);
+                AddText(text, FontsAndColorsService.KeywordSetting, null);
             }
 
             public void AddOperand(Operand operand)
@@ -184,7 +204,7 @@ namespace ZDebug.UI.Controls
 
             public void AddSeparator(string text)
             {
-                AddText(text, FontsAndColorsService.SeparatorSetting);
+                AddText(text, FontsAndColorsService.SeparatorSetting, null);
             }
 
             public void AddVariable(Variable variable, bool @out = false)
@@ -206,11 +226,11 @@ namespace ZDebug.UI.Controls
                 }
                 else if (variable.Kind == VariableKind.Local)
                 {
-                    AddText(variable.ToString(), FontsAndColorsService.LocalVariableSetting);
+                    AddText(variable.ToString(), FontsAndColorsService.LocalVariableSetting, variable);
                 }
                 else // VariableKind.Global
                 {
-                    AddText(variable.ToString(), FontsAndColorsService.GlobalVariableSetting);
+                    AddText(variable.ToString(), FontsAndColorsService.GlobalVariableSetting, variable);
                 }
             }
 
