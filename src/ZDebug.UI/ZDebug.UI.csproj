@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ZDebug.IO\ZDebug.IO.csproj" />
     <ProjectReference Include="..\ZDebug.UI.Core\ZDebug.UI.Core.csproj" />
+    <ProjectReference Include="..\ZDebug.UI.Viewers\ZDebug.UI.Viewers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

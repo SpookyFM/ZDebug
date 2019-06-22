@@ -4,6 +4,7 @@ using System.Composition;
 using System.Linq;
 using System.Xml.Linq;
 using ZDebug.Core.Routines;
+using ZDebug.UI.Viewers;
 
 namespace ZDebug.UI.Services
 {
@@ -14,6 +15,7 @@ namespace ZDebug.UI.Services
         private Dictionary<KeyValuePair<int, int>, VariableView> localsViews;
         private Dictionary<int, VariableView> globalsViews;
 
+        private Class1 test;
 
         [ImportingConstructor]
         public VariableViewService(
@@ -23,6 +25,7 @@ namespace ZDebug.UI.Services
 
             localsViews = new Dictionary<KeyValuePair<int, int>, VariableView>();
             globalsViews = new Dictionary<int, VariableView>();
+            test = new Class1();
         }
 
         public void SetViewForLocal(ZRoutine routine, int localIndex, VariableView view)
