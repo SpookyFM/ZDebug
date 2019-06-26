@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ZDebug.IO\ZDebug.IO.csproj" />
     <ProjectReference Include="..\ZDebug.UI.Core\ZDebug.UI.Core.csproj" />
+    <ProjectReference Include="..\ZDebug.UI.Visualizers\ZDebug.UI.Visualizers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

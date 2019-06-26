@@ -16,3 +16,6 @@ TestResult*.xml
 *.fsproj.user
 *.vbproj.user
 *.suo
+
+# Ignore nuget packages
+packages/
