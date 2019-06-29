@@ -91,6 +91,10 @@ namespace ZDebug.UI.Visualizers
             from items in ExpressionParser.AtLeastOnce()
             select new Block(new List<Expression>(items));
 
+        internal static Parser<Program> ProgramParser =
+            from items in ExpressionParser.AtLeastOnce()
+            select new Program(new List<Expression>(items));
+
         internal static ExecutionContext context = new ExecutionContext();
 
         static void DoParse()
@@ -111,6 +115,11 @@ namespace ZDebug.UI.Visualizers
             var program = BlockParser.Parse(source.ToString());
 
             program.Execute(context);
+        }
+
+        public static Program ParseProgram(string contents)
+        {
+            return ProgramParser.Parse(contents);
         }
 
        

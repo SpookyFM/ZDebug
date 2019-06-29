@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using ZDebug.UI.Extensions;
 using ZDebug.UI.Services;
 using ZDebug.UI.Utilities;
+using ZDebug.UI.Visualizers.Services;
 
 namespace ZDebug.UI.ViewModel
 {
@@ -31,6 +32,7 @@ namespace ZDebug.UI.ViewModel
         private readonly GoToAddressDialogViewModel goToAddressDialogViewModel;
         private readonly GameInfoDialogViewModel gameInfoDialogViewModel;
         private readonly GameScriptDialogViewModel gameScriptDialogViewModel;
+        private readonly VisualizerService visualizerService;
 
         [ImportingConstructor]
         public MainWindowViewModel(
@@ -50,7 +52,8 @@ namespace ZDebug.UI.ViewModel
             MessageLogViewModel messageLogViewModel,
             GoToAddressDialogViewModel goToAddressDialogViewModel,
             GameInfoDialogViewModel gameInfoDialogViewModel,
-            GameScriptDialogViewModel gameScriptDialogViewModel)
+            GameScriptDialogViewModel gameScriptDialogViewModel,
+            VisualizerService visualizerService)
             : base("MainWindowView")
         {
             this.storyService = storyService;
@@ -74,6 +77,7 @@ namespace ZDebug.UI.ViewModel
             this.goToAddressDialogViewModel = goToAddressDialogViewModel;
             this.gameInfoDialogViewModel = gameInfoDialogViewModel;
             this.gameScriptDialogViewModel = gameScriptDialogViewModel;
+            this.visualizerService = visualizerService;
 
             this.OpenStoryCommand = RegisterCommand(
                 text: "Open",

@@ -2,6 +2,7 @@
 using System.Windows;
 using ZDebug.UI.Services;
 using ZDebug.UI.ViewModel;
+using ZDebug.UI.Visualizers.Services;
 
 namespace ZDebug.UI
 {
@@ -19,7 +20,8 @@ namespace ZDebug.UI
         {
             var configuration = new ContainerConfiguration()
                 .WithAssembly(typeof(App).Assembly)
-                .WithAssembly(typeof(StoryService).Assembly);
+                .WithAssembly(typeof(StoryService).Assembly)
+                .WithAssembly(typeof(VisualizerService).Assembly);
 
             this.compositionHost = configuration.CreateContainer();
 
