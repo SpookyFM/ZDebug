@@ -6,7 +6,7 @@ namespace ZDebug.UI.Visualizers.Types
     /// <summary>
     /// A block is a sequence of expressions
     /// </summary>
-    class Block : Expression
+    public class Block : Expression
     {
         public Block(List<Expression> sequence)
         {

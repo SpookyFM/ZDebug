@@ -5,7 +5,7 @@ namespace ZDebug.UI.Visualizers.Types
     /// <summary>
     /// Any expression in the language
     /// </summary>
-    abstract class Expression
+    public abstract class Expression
     {
         /// <summary>
         /// Execute this expression and save the updated state to the supplied ExecutionContext

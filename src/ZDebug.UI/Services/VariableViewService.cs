@@ -4,6 +4,7 @@ using System.Composition;
 using System.Linq;
 using System.Xml.Linq;
 using ZDebug.Core.Routines;
+using ZDebug.UI.Visualizers.Services;
 
 namespace ZDebug.UI.Services
 {
@@ -11,18 +12,22 @@ namespace ZDebug.UI.Services
     internal class VariableViewService : IService, IPersistable
     {
         private readonly StoryService storyService;
+        // private readonly VisualizerService visualizerService;
         private Dictionary<KeyValuePair<int, int>, VariableView> localsViews;
         private Dictionary<int, VariableView> globalsViews;
+        
 
 
         [ImportingConstructor]
         public VariableViewService(
             StoryService storyService)
+            //VisualizerService visualizerService)
         {
             this.storyService = storyService;
 
             localsViews = new Dictionary<KeyValuePair<int, int>, VariableView>();
             globalsViews = new Dictionary<int, VariableView>();
+            // visualizerService
         }
 
         public void SetViewForLocal(ZRoutine routine, int localIndex, VariableView view)

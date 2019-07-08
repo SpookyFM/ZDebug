@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace ZDebug.UI.Visualizers.Types
 {
-    class Program : Block
+    public class Program : Block
     {
         public Program(List<Expression> sequence) : base(sequence)
         {
+
         }
+
+        public String Name
+        {
+            get;
+            set;
+        }
+
     }
 }

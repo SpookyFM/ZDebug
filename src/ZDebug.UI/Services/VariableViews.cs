@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using ZDebug.Core.Basics;
 using ZDebug.UI.ViewModel;
+using ZDebug.UI.Visualizers.Services;
 
 namespace ZDebug.UI.Services
 {
@@ -233,6 +234,14 @@ namespace ZDebug.UI.Services
                         yield return (VariableView)property.GetValue(null);
                     }
                 }
+
+                var service = App.Current.GetService<VisualizerService>();
+                var program = service.AllPrograms[0];
+                var testView = new VariableView("test", program.Name, (value, memory) =>
+                {
+                    return "Test";
+                });
+                yield return testView;
             }
         }
 

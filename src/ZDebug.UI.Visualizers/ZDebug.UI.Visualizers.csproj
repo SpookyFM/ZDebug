@@ -79,6 +79,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ZDebug.Core\ZDebug.Core.csproj">
+      <Project>{B3904719-82C6-4C2C-8E91-F3B7E54D69D5}</Project>
+      <Name>ZDebug.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ZDebug.UI.Core\ZDebug.UI.Core.csproj">
       <Project>{3293C725-C2F5-4D8F-9EF9-C714373B6372}</Project>
       <Name>ZDebug.UI.Core</Name>
