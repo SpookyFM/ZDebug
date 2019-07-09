@@ -53,7 +53,7 @@ namespace ZDebug.UI.Visualizers.Services
             }
             var result = new List<string>();
             var value = property.ReadAsBytes();
-            for (var i = 0; i < value.Length / 2; i += 2)
+            for (var i = 0; i < value.Length; i += 2)
             {
                 var firstByte = value[i];
                 var secondByte = value[i + 1];
@@ -68,7 +68,7 @@ namespace ZDebug.UI.Visualizers.Services
         {
             // ParseAllVisualizers();
 
-            /* 
+            /*
             List<string> result = new List<string>();
 
             // Temporary code for exporting all synonyms
@@ -80,7 +80,7 @@ namespace ZDebug.UI.Visualizers.Services
 
             string folderName = "out";
             string fullPath = Path.Combine(System.AppContext.BaseDirectory, folderName);
-            File.WriteAllLines(fullPath + "\\out.txt", result); */
+            File.WriteAllLines(fullPath + "\\out.txt", result);*/
         }
     }
 }

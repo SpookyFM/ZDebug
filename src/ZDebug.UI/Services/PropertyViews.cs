@@ -36,7 +36,7 @@ namespace ZDebug.UI.Services
             {
                 var storyService = App.Current.GetService<StoryService>();
                 var result = new List<String>();
-                for (var i = 0; i < value.Length / 2; i+=2)
+                for (var i = 0; i < value.Length; i+=2)
                 {
                     var firstByte = value[i];
                     var secondByte = value[i + 1];
