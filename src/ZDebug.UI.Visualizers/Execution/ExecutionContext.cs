@@ -9,29 +9,18 @@ namespace ZDebug.UI.Visualizers.Execution
     /// <summary>
     /// An ExecutionContext saves the state of the program and provides the functions to be called
     /// </summary>
-    public class ExecutionContext
+    public abstract class ExecutionContext
     {
         public Dictionary<string, byte> ByteVariables = new Dictionary<string, byte>();
         public Dictionary<string, ushort> WordVariables = new Dictionary<string, ushort>();
 
-        public ushort readWord()
-        {
-            return 1024;
-        }
+        public abstract ushort readWord();
 
-        public void seek(ushort offset)
-        {
-            Console.WriteLine("Seeking to " + offset);
-        }
+        public abstract void seek(ushort offset);
 
-        public byte readByte()
-        {
-            return 128;
-        }
+        public abstract byte readByte();
 
-        public void print(ushort value, int radix)
-        {
-            string result = Convert.ToString(value, radix);
-        }
+        public abstract void print(ushort value, int radix);
+        
     }
 }
