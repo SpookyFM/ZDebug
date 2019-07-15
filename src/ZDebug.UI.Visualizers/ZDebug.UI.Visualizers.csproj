@@ -69,6 +69,7 @@
     <Compile Include="Types\FunctionCall.cs" />
     <Compile Include="Types\Literal.cs" />
     <Compile Include="Types\Program.cs" />
+    <Compile Include="Types\StringLiteral.cs" />
     <Compile Include="Types\ValueSource.cs" />
     <Compile Include="Types\VariableReference.cs" />
     <Compile Include="Types\VariableType.cs" />

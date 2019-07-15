@@ -22,10 +22,15 @@ namespace ZDebug.UI.Visualizers.Types
             return ok;
         }
 
-        public ushort GetValue(ExecutionContext context)
+        public ushort GetWordValue(ExecutionContext context)
         {
             bool ok = TryGetValue(context, out ushort result);
             return result;
+        }
+
+        static bool IsParams(ParameterInfo param)
+        {
+            return param.IsDefined(typeof(ParamArrayAttribute), false);
         }
 
         private bool TryGetValue(ExecutionContext context, out ushort result)
@@ -37,7 +42,17 @@ namespace ZDebug.UI.Visualizers.Types
                 return false;
             }
 
-            object resultObj = info.Invoke(context, GetArguments(context).ToArray());
+            object[] arguments;
+            
+            var parameters = info.GetParameters();
+            if (parameters.Length == 1 && IsParams(parameters[0]))
+            {
+                arguments = new object[] { GetArguments(context).ToArray() };
+            } else
+            {
+                arguments = GetArguments(context).ToArray();
+            }
+            object resultObj = info.Invoke(context, arguments);
             if (resultObj != null)
             {
                 if (resultObj.GetType() == typeof(ushort))
@@ -63,9 +78,27 @@ namespace ZDebug.UI.Visualizers.Types
             List<object> result = new List<object>();
             foreach (IValueSource current in Arguments)
             {
-                result.Add(current.GetValue(context));
+                object v;
+                if (current.GetValueType() == typeof(ushort))
+                {
+                    v = current.GetWordValue(context);
+                } else
+                {
+                    v = current.GetStringValue(context);
+                }
+                result.Add(v);
             }
             return result;
+        }
+
+        public string GetStringValue(ExecutionContext context)
+        {
+            return null;
+        }
+
+        public System.Type GetValueType()
+        {
+            return typeof(ushort);
         }
 
         public String FunctionName;

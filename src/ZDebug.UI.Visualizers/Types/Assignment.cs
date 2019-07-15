@@ -16,7 +16,7 @@ namespace ZDebug.UI.Visualizers.Types
 
         public override bool Execute(ExecutionContext context)
         {
-            ushort value = ValueSource.GetValue(context);
+            ushort value = ValueSource.GetWordValue(context);
             if (context.WordVariables.ContainsKey(Variable))
             {
                 context.WordVariables[Variable] = value;

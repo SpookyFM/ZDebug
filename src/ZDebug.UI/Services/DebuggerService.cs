@@ -182,7 +182,7 @@ namespace ZDebug.UI.Services
 
                     if (storyService.Story.printTriggered)
                     {
-                        ChangeState(DebuggerState.Stopped);
+                        // ChangeState(DebuggerState.Stopped);
                         storyService.Story.printTriggered = false;
                     }
 

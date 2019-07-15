@@ -2,28 +2,33 @@
 
 namespace ZDebug.UI.Visualizers.Types
 {
-    class Literal : IValueSource
+    class StringLiteral : IValueSource
     {
-        public Literal(ushort value)
+        private string Value;
+
+        public StringLiteral(string value)
         {
             Value = value;
         }
 
-        public ushort Value;
-
-        public ushort GetWordValue(ExecutionContext context)
+        public string GetValue(ExecutionContext context)
         {
             return Value;
         }
 
+        public ushort GetWordValue(ExecutionContext context)
+        {
+            return 0;
+        }
+
         public string GetStringValue(ExecutionContext context)
         {
-            return null;
+            return Value;
         }
 
         public System.Type GetValueType()
         {
-            return typeof(ushort);
+            return typeof(string);
         }
     }
 }

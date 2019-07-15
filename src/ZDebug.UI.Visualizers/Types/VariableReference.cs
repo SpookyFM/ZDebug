@@ -15,7 +15,7 @@ namespace ZDebug.UI.Visualizers.Types
 
         public string VariableName;
 
-        public ushort GetValue(ExecutionContext context)
+        public ushort GetWordValue(ExecutionContext context)
         {
             if (context.ByteVariables.ContainsKey(VariableName))
             {
@@ -25,6 +25,16 @@ namespace ZDebug.UI.Visualizers.Types
             {
                 return context.WordVariables[VariableName];
             }
+        }
+
+        public string GetStringValue(ExecutionContext context)
+        {
+            return null;
+        }
+
+        public System.Type GetValueType()
+        {
+            return typeof(ushort);
         }
     }
 }

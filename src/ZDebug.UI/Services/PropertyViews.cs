@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using ZDebug.Core.Basics;
 using ZDebug.UI.ViewModel;
+using ZDebug.UI.Visualizers.Services;
 
 namespace ZDebug.UI.Services
 {
@@ -69,6 +70,15 @@ namespace ZDebug.UI.Services
                         yield return (PropertyView)property.GetValue(null);
                     }
                 }
+                var service = App.Current.GetService<VisualizerService>();
+                var program = service.AllPrograms[0];
+                var testView = new PropertyView("test", program.Name, (value, memory) =>
+                {
+                    var context = new PropertyViewExecutionContext(value, memory);
+                    program.Execute(context);
+                    return context.Result;
+                });
+                yield return testView;
             }
         }
 

@@ -20,7 +20,7 @@ namespace ZDebug.UI.Visualizers.Execution
 
         public abstract byte readByte();
 
-        public abstract void print(ushort value, int radix);
+        public abstract void print(params object[] args);
         
     }
 }

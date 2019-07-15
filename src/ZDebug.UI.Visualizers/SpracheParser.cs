@@ -41,6 +41,13 @@ namespace ZDebug.UI.Visualizers
             from number in Parse.Digit.AtLeastOnce().Text().Token()
             select new Literal(ushort.Parse(number));
 
+
+        internal static Parser<StringLiteral> StringLiteralParser =
+            from lQuote in Parse.Char('"')
+            from s in Parse.LetterOrDigit.Or(Parse.WhiteSpace).Many().Text()
+            from rQuote in Parse.Char('"')
+            select new StringLiteral(s);
+
         internal static Parser<IValueSource> LiteralValueSourceParser =
             from c in LiteralParser
             select c;
@@ -57,7 +64,7 @@ namespace ZDebug.UI.Visualizers
             select f;
 
         internal static Parser<IValueSource> ValueSourceParser =
-            LiteralValueSourceParser.Or(FunctionCallValueSourceParser).Or(VariableReferenceParser);
+            LiteralValueSourceParser.Or(FunctionCallValueSourceParser).Or(VariableReferenceParser).Or(StringLiteralParser);
 
         internal static Parser<Assignment> AssignmentParser =
             from i in IdentifierParser
@@ -95,10 +102,11 @@ namespace ZDebug.UI.Visualizers
             from items in ExpressionParser.AtLeastOnce()
             select new Program(new List<Expression>(items));
 
-        internal static ExecutionContext context = new ExecutionContext();
+       //  internal static ExecutionContext context = new ExecutionContext();
 
         static void DoParse()
         {
+            /* 
             StringBuilder source = new StringBuilder();
             source.AppendLine("byte length");
             source.AppendLine("length = 7");
@@ -114,7 +122,7 @@ namespace ZDebug.UI.Visualizers
 
             var program = BlockParser.Parse(source.ToString());
 
-            program.Execute(context);
+            program.Execute(context); */
         }
 
         public static Program ParseProgram(string contents)

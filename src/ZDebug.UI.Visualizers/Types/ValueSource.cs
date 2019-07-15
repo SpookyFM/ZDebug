@@ -7,6 +7,10 @@ namespace ZDebug.UI.Visualizers.Types
     /// </summary>
     interface IValueSource
     {
-        ushort GetValue(ExecutionContext context);
+        ushort GetWordValue(ExecutionContext context);
+
+        string GetStringValue(ExecutionContext context);
+
+        System.Type GetValueType();
     }
 }

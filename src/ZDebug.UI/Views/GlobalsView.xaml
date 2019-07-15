@@ -26,8 +26,8 @@
                         <StackPanel Orientation="Horizontal"
                                     TextElement.FontFamily="Consolas"
                                     Margin="8,0,0,0"
-                                    ContextMenu="{DynamicResource VariableViewContextMenu}">
-
+                                    ContextMenu="{DynamicResource VariableViewContextMenu}"
+                                    >
                             <StackPanel.Style>
                                 <Style TargetType="StackPanel">
                                     <Setter Property="Visibility" Value="Collapsed"/>

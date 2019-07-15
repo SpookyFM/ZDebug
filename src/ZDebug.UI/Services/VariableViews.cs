@@ -234,12 +234,13 @@ namespace ZDebug.UI.Services
                         yield return (VariableView)property.GetValue(null);
                     }
                 }
-
                 var service = App.Current.GetService<VisualizerService>();
                 var program = service.AllPrograms[0];
                 var testView = new VariableView("test", program.Name, (value, memory) =>
                 {
-                    return "Test";
+                    var context = new VariableViewExecutionContext(value, memory);
+                    bool ok = program.Execute(context);
+                    return ok ? context.Result : "ERROR";
                 });
                 yield return testView;
             }

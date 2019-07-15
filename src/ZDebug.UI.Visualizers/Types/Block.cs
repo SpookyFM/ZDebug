@@ -17,9 +17,16 @@ namespace ZDebug.UI.Visualizers.Types
         {
             foreach (Expression i in Sequence)
             {
-                bool result = i.Execute(context);
-                if (!result)
+                try
                 {
+                    bool result = i.Execute(context);
+                    if (!result)
+                    {
+                        return false;
+                    }
+                } catch (System.Exception e)
+                {
+                    System.Console.WriteLine(e.ToString());
                     return false;
                 }
             }

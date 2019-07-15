@@ -8,48 +8,24 @@ using ZDebug.UI.Visualizers.Execution;
 
 namespace ZDebug.UI.Services
 {
-    class PropertyViewExecutionContext: ExecutionContext
+    class PropertyViewExecutionContext: ExecutionContextBase
     {
+        private MemoryReader propertyReader;
 
-        private readonly byte[] value;
-
-        private MemoryReader reader;
-
-        private StringBuilder result;
-
-        public PropertyViewExecutionContext(byte[] value)
+        public PropertyViewExecutionContext(byte[] value, byte[] memory) :
+            base(memory)
         {
-            this.value = value;
-            reader = new MemoryReader(value, 0);
-            result = new StringBuilder();
+            propertyReader = new MemoryReader(value, 0);
         }
 
-        public override ushort readWord()
+        public ushort readPropertyWord()
         {
-            return reader.NextWord();
+            return propertyReader.NextWord();
         }
 
-        public override void seek(ushort offset)
+        public byte readPropertyByte()
         {
-            reader.Address = offset;
-        }
-
-        public override byte readByte()
-        {
-            return reader.NextByte();
-        }
-
-        public override void print(ushort value, int radix)
-        {
-            result.Append(Convert.ToString(value, radix));
-        }
-
-        public string Result
-        {
-            get
-            {
-                return result.ToString();
-            }
+            return propertyReader.NextByte();
         }
     }
 }

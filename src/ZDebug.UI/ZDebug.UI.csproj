@@ -49,6 +49,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="vis\test.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="Views\ContextMenus - Copy.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

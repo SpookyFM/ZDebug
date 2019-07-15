@@ -22,11 +22,10 @@ namespace ZDebug.UI.Visualizers.Types
 
         public override bool Execute(ExecutionContext context)
         {
-            ushort i = 0;
-            for (ushort iter = RangeStart.GetValue(context); iter < RangeEnd.GetValue(context); iter++)
+            for (ushort iter = RangeStart.GetWordValue(context); iter < RangeEnd.GetWordValue(context); iter++)
             {
                 context.WordVariables[Reference.VariableName] = iter;
-                bool result = InnerBlock.Sequence[i++].Execute(context);
+                bool result = InnerBlock.Execute(context);
                 if (!result)
                 {
                     return false;
