@@ -106,6 +106,9 @@
                     <c:AutoDisableImage Source="{StaticResource stepOutImage}"/>
                 </Button>
                 <Separator/>
+                <ToggleButton Command="{Binding ToggleTrackingCommand}" ToolTip="Toggle Tracking Execution">
+                    <TextBlock>Track</TextBlock>
+                </ToggleButton>
                 <Button Command="{Binding ResetSessionCommand}" ToolTip="Reset Debugging Session">
                     <c:AutoDisableImage Source="{StaticResource resetImage}"/>
                 </Button>

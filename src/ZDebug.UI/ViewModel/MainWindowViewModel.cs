@@ -141,6 +141,12 @@ namespace ZDebug.UI.ViewModel
                 canExecute: CanStepOutExecute,
                 inputGestures: new KeyGesture(Key.F11, ModifierKeys.Shift));
 
+            this.ToggleTrackingCommand = RegisterCommand(
+                text: "ToggleTracking",
+                name: "Toggle Tracking",
+                executed: ToggleTrackingExecuted,
+                canExecute: CanExecuteToggleTracking);
+
             this.ResetSessionCommand = RegisterCommand(
                 text: "ResetSession",
                 name: "Reset Debugging Session",
@@ -274,6 +280,16 @@ namespace ZDebug.UI.ViewModel
             debuggerService.StepOut();
         }
 
+        private bool CanExecuteToggleTracking()
+        {
+            return true;
+        }
+        
+        private void ToggleTrackingExecuted()
+        {
+            debuggerService.ToggleTrackingExecution();
+        }
+
         private bool CanResetSessionExecute()
         {
             return debuggerService.CanResetSession;
@@ -325,6 +341,7 @@ namespace ZDebug.UI.ViewModel
         public ICommand StepIntoCommand { get; private set; }
         public ICommand StepOverCommand { get; private set; }
         public ICommand StepOutCommand { get; private set; }
+        public ICommand ToggleTrackingCommand { get; private set; }
         public ICommand ResetSessionCommand { get; private set; }
         public ICommand ResetWindowLayoutCommand { get; private set; }
         public ICommand AboutGameCommand { get; private set; }

@@ -62,6 +62,7 @@ namespace ZDebug.UI.ViewModel
             this.debuggerService = debuggerService;
             this.debuggerService.MachineCreated += DebuggerService_MachineCreated;
             this.debuggerService.MachineDestroyed += DebuggerService_MachineDestroyed;
+            this.debuggerService.TrackingToggled += DebuggerService_TrackingToggled;
             this.debuggerService.StateChanged += DebuggerService_StateChanged;
             this.debuggerService.Stepped += DebuggerService_Stepped;
 
@@ -87,6 +88,14 @@ namespace ZDebug.UI.ViewModel
                 name: "Edit Name",
                 executed: EditNameExecuted,
                 canExecute: CanEditNameExecute);
+        }
+
+        private void DebuggerService_TrackingToggled(object sender, System.EventArgs e)
+        {
+            // Clear the selected lines
+            foreach (var line in lines) {
+                line.WasExecuted = false;
+            }
         }
 
         private bool CanEditNameExecute(int address)
@@ -200,12 +209,17 @@ namespace ZDebug.UI.ViewModel
 
         private void DebuggerService_Stepped(object sender, SteppedEventArgs e)
         {
+            var oldLine = GetLineByAddress(e.OldPC);
+            if (debuggerService.IsTrackingExecution)
+            {
+                oldLine.WasExecuted = true;
+            }
+
             if (debuggerService.State == DebuggerState.Running)
             {
                 return;
             }
 
-            var oldLine = GetLineByAddress(e.OldPC);
             oldLine.HasIP = false;
 
             if (debuggerService.State == DebuggerState.AwaitingInput ||

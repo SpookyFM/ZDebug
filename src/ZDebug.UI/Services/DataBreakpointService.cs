@@ -24,9 +24,10 @@ namespace ZDebug.UI.Services
 
         private void StoryService_StoryOpened(object sender, StoryOpenedEventArgs e)
         {
-            // Temporary one for finding out when G96 is written to
-            var address = e.Story.GlobalVariablesTable[0x96];
-            Add(address, 4, e.Story.Memory);
+            // Temporary one for finding out when G66 is written to
+            //var address = e.Story.GlobalVariablesTable[0x66];
+            // Add(address, 4, e.Story.Memory);
+            // AddGlobalVariable(0x6d, e.Story.Memory);
 
             // Update all breakpoints as we might have created them before we had memory to load their initial values from
             UpdateAllBreakpoints(e.Story.Memory);

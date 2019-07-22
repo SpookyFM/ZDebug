@@ -173,6 +173,10 @@
                                             <DataTrigger Binding="{Binding Path=State}" Value="Blocked">
                                                 <Setter Property="Fill" Value="{DynamicResource blockedLineBackground}"/>
                                             </DataTrigger>
+                                            <!-- TODO: Might want to change different parts of the line for different things -->
+                                            <DataTrigger Binding="{Binding Path=WasExecuted}" Value="True">
+                                                <Setter Property="Fill" Value="{DynamicResource stackLineBackground}"/>
+                                            </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Rectangle.Style>
@@ -218,6 +222,10 @@
                                             <Setter Property="BorderBrush" Value="{DynamicResource pausedLineBorder}"/>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Path=State}" Value="Blocked">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="BorderBrush" Value="{DynamicResource blockedLineBorder}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=WasExecuted}" Value="True">
                                             <Setter Property="Visibility" Value="Visible"/>
                                             <Setter Property="BorderBrush" Value="{DynamicResource blockedLineBorder}"/>
                                         </DataTrigger>

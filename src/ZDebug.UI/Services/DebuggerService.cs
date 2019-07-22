@@ -22,6 +22,8 @@ namespace ZDebug.UI.Services
         private bool stopping;
         private bool hasStepped;
 
+        private bool isTrackingExecution;
+
         // Expected PC for stepping over or out - acts like a breakpoint
         private int? expectedPC;
 
@@ -54,7 +56,10 @@ namespace ZDebug.UI.Services
             state = newState;
 
             // In case we were waiting to reach a step out or over, we'll remove it
-            expectedPC = null;
+            if (state == DebuggerState.Stopped || state == DebuggerState.AwaitingInput || state == DebuggerState.StoppedAtError)
+            {
+                expectedPC = null;
+            }
 
             var handler = StateChanged;
             if (handler != null)
@@ -200,7 +205,7 @@ namespace ZDebug.UI.Services
                     var allTriggeredDataBreakpoints = dataBreakpointService.UpdateAllBreakpoints(storyService.Story.Memory);
                     if (allTriggeredDataBreakpoints.Count() > 0)
                     {
-                        // ChangeState(DebuggerState.Stopped);
+                        ChangeState(DebuggerState.Stopped);
                     }
 
                     if ((expectedPC ?? -1) == newPC)
@@ -217,6 +222,20 @@ namespace ZDebug.UI.Services
             {
                 currentException = ex;
                 ChangeState(DebuggerState.StoppedAtError);
+            }
+        }
+
+        public void ToggleTrackingExecution()
+        {
+            isTrackingExecution = !isTrackingExecution;
+            TrackingToggled?.Invoke(this, new EventArgs());
+        }
+
+        public bool IsTrackingExecution
+        {
+            get
+            {
+                return isTrackingExecution;
             }
         }
 
@@ -387,5 +406,7 @@ namespace ZDebug.UI.Services
 
         public event EventHandler<SteppingEventArgs> Stepping;
         public event EventHandler<SteppedEventArgs> Stepped;
+
+        public event EventHandler<EventArgs> TrackingToggled;
     }
 }

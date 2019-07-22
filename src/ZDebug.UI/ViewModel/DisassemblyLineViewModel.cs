@@ -3,6 +3,7 @@
     internal abstract partial class DisassemblyLineViewModel : ViewModelBase
     {
         private bool hasBreakpoint;
+        private bool wasExecuted;
         private bool hasIP;
         private bool isOnStack;
         private bool showBlankBefore;
@@ -19,6 +20,19 @@
                 {
                     hasBreakpoint = value;
                     PropertyChanged("HasBreakpoint");
+                }
+            }
+        }
+
+        public bool WasExecuted
+        {
+            get { return wasExecuted; }
+            set
+            {
+                if (wasExecuted != value)
+                {
+                    wasExecuted = value;
+                    PropertyChanged("WasExecuted");
                 }
             }
         }
