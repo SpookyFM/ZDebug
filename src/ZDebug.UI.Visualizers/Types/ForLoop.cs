@@ -22,7 +22,7 @@ namespace ZDebug.UI.Visualizers.Types
 
         public override bool Execute(ExecutionContext context)
         {
-            for (ushort iter = RangeStart.GetWordValue(context); iter < RangeEnd.GetWordValue(context); iter++)
+            for (ushort iter = RangeStart.GetWordValue(context); iter <= RangeEnd.GetWordValue(context); iter++)
             {
                 context.WordVariables[Reference.VariableName] = iter;
                 bool result = InnerBlock.Execute(context);
