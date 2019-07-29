@@ -14,10 +14,13 @@ namespace ZDebug.UI.Services
 
         private StringBuilder result;
 
+        private Stack<int> positionStack;
+
         public ExecutionContextBase(byte[] memory)
         {
             reader = new MemoryReader(memory, 0);
             result = new StringBuilder();
+            positionStack = new Stack<int>();
         }
 
         public override ushort readWord()
@@ -47,6 +50,33 @@ namespace ZDebug.UI.Services
                 string value = (string)args[0];
                 result.Append(value);
             }
+        }
+
+        public void printObject(ushort index)
+        {
+            var storyService = App.Current.GetService<StoryService>();
+            var obj = storyService.Story.ObjectTable.GetByNumber(index);
+            result.Append(obj.ShortName);
+        }
+
+        public void printPString(ushort pString)
+        {
+            var storyService = App.Current.GetService<StoryService>();
+            int unpacked = storyService.Story.UnpackStringAddress(pString);
+            var zWords = storyService.Story.ZText.ReadZWords(unpacked);
+            var s = storyService.Story.ZText.ZWordsAsString(zWords, Core.Text.ZTextFlags.All);
+            result.Append(s);
+        }
+
+        public void pushPosition()
+        {
+            positionStack.Push(reader.Address);
+        }
+
+        public void popPosition()
+        {
+            int popped = positionStack.Pop();
+            reader.Address = popped;
         }
 
         public string Result
