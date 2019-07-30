@@ -56,7 +56,7 @@ namespace ZDebug.UI.Services
         {
             var storyService = App.Current.GetService<StoryService>();
             var obj = storyService.Story.ObjectTable.GetByNumber(index);
-            result.Append(obj.ShortName);
+            result.Append(obj.ShortName + "(" + obj.Number.ToString() + ")");
         }
 
         public void printPString(ushort pString)
