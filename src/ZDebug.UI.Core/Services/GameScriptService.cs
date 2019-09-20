@@ -43,7 +43,14 @@ namespace ZDebug.UI.Services
         public void SetCommands(IEnumerable<string> commands)
         {
             this.commands.Clear();
-            this.commands.AddRange(commands);
+            // Clean up YAML
+            foreach (string currentLine in commands) {
+                if (currentLine.Trim().StartsWith("#")) {
+                    continue;
+                }
+                string cleanedLine = currentLine.Replace("-", "");
+                this.commands.Add(cleanedLine);
+            }
             commandIndex = this.commands.Count != 0 ? 0 : -1;
             OnReset();
         }
