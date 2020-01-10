@@ -11,6 +11,7 @@ namespace ZDebug.UI.Services
     {
         public static PropertyView HexadecimalView { get; }
         public static PropertyView StringView { get; }
+        public static PropertyView PackedStringView { get; }
         public static PropertyView TableView { get; }
         public static PropertyView RoutineView { get; }
 
@@ -30,6 +31,16 @@ namespace ZDebug.UI.Services
                 var secondByte = value[1];
                 ushort currentWord = (ushort)(((ushort)(firstByte) << 8) + secondByte);
                 var zWords = storyService.Story.ZText.ReadZWords(currentWord);
+                return storyService.Story.ZText.ZWordsAsString(zWords, Core.Text.ZTextFlags.All);
+            });
+
+            PackedStringView = new PropertyView("strp", "String view (packed)", (value, memory) =>
+            {
+                var storyService = App.Current.GetService<StoryService>();
+                var firstByte = value[0];
+                var secondByte = value[1];
+                ushort currentWord = (ushort)(((ushort)(firstByte) << 8) + secondByte);
+                var zWords = storyService.Story.ZText.ReadZWords(Header.UnpackStringAddress(memory, currentWord));
                 return storyService.Story.ZText.ZWordsAsString(zWords, Core.Text.ZTextFlags.All);
             });
 

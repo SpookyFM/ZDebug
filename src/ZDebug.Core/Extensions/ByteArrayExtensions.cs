@@ -32,7 +32,13 @@ namespace ZDebug.Core.Extensions
 
         public static ushort ReadWord(this byte[] bytes, int index)
         {
-            return (ushort)(bytes[index] << 8 | bytes[index + 1]);
+            if (bytes.Length > index + 2)
+            {
+                return (ushort)(bytes[index] << 8 | bytes[index + 1]);
+            } else
+            {
+                return 0;
+            }
         }
 
         public static ushort ReadWord(this byte[] array, ref int index)

@@ -19,5 +19,11 @@ namespace ZDebug.UI.Visualizers.Types
             set;
         }
 
+        public String ShortName
+        {
+            get;
+            set;
+        }
+
     }
 }

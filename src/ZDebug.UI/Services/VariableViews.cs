@@ -102,13 +102,28 @@ namespace ZDebug.UI.Services
                 // Each block consists of the byte address of the word in the dictionary, if it is in the dictionary, or 0 if it isn't; followed by a byte giving the number of letters in the word; and finally a byte giving the position in the text-buffer of the first letter of the word.
                 // First two bytes are the dictionary entry
 
+                var storyService = App.Current.GetService<StoryService>();
+                if (storyService == null)
+                {
+                    return "----";
+                }
+                if (!storyService.IsStoryOpen)
+                {
+                    return "----";
+                }
+                var dictionary = storyService.Story.Dictionary;
+
                 ushort currentPosition = value;
-                ushort dictionaryEntry = BitConverter.ToUInt16(memory, currentPosition);
+                var memoryReader = new MemoryReader(memory, currentPosition);
+
+                ushort dictionaryEntryAddress = memoryReader.NextWord();
                 currentPosition += 2;
                 byte numLetters = memory[currentPosition++];
                 byte position = memory[currentPosition++];
 
-                var word = StringView.ConvertToString(dictionaryEntry, memory);
+                var dictionaryEntry = dictionary.GetEntryFromAddress(dictionaryEntryAddress);
+
+                var word = dictionaryEntry != null ? dictionaryEntry.ZText : "---";
 
                 return word + " - " + numLetters + " - " + position;
             });
@@ -235,14 +250,18 @@ namespace ZDebug.UI.Services
                     }
                 }
                 var service = App.Current.GetService<VisualizerService>();
-                var program = service.AllPrograms[0];
-                var testView = new VariableView("test", program.Name, (value, memory) =>
+                foreach (var program in service.AllPrograms)
                 {
-                    var context = new VariableViewExecutionContext(value, memory);
-                    bool ok = program.Execute(context);
-                    return ok ? context.Result : "ERROR";
-                });
-                yield return testView;
+                    var currentView = new VariableView(program.ShortName, program.Name, (value, memory) =>
+                    {
+                        var context = new VariableViewExecutionContext(value, memory);
+                        bool ok = program.Execute(context);
+                        return ok ? context.Result : "ERROR";
+                    });
+                    yield return currentView;
+                }
+               
+               
             }
         }
 
