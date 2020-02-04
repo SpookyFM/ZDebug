@@ -8,7 +8,7 @@ namespace ZDebug.UI.ViewModel
     {
         private readonly CommandBindingCollection commandBindings = new CommandBindingCollection();
 
-        private void AddCommandBinding(CommandBinding binding)
+        protected void AddCommandBinding(CommandBinding binding)
         {
             CommandManager.RegisterClassCommandBinding(this.GetType(), binding);
             commandBindings.Add(binding);

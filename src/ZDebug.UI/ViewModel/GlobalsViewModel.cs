@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Composition;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -47,6 +48,28 @@ namespace ZDebug.UI.ViewModel
                 name: "SetVariableView",
                 executed: SetVariableViewExecuted,
                 canExecute: CanSetVariableViewExecute);
+
+            CommandBinding CopyCommandBinding = new CommandBinding(
+                ApplicationCommands.Copy,
+                CopyCommandExecuted,
+                CopyCommandCanExecute);
+
+            AddCommandBinding(CopyCommandBinding);
+            
+        }
+
+        private void CopyCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CopyCommandExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            VariableViewModel viewModel = e.Parameter as VariableViewModel;
+            if (viewModel != null)
+            {
+                System.Windows.Clipboard.SetText(viewModel.DisplayValue);
+            }
         }
 
         private void VariableViewService_GlobalViewChanged(object sender, GlobalViewChangedArgs e)
@@ -129,5 +152,6 @@ namespace ZDebug.UI.ViewModel
         {
             get; private set;
         }
+
     }
 }
