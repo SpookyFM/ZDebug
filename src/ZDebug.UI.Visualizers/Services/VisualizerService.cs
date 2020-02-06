@@ -28,7 +28,10 @@ namespace ZDebug.UI.Visualizers.Services
         {
             string contents = File.ReadAllText(filename);
             Program result = SpracheParser.ParseProgram(contents);
+            string filenameWithoutExtension = Path.GetFileNameWithoutExtension(filename);
+
             result.Name = filename;
+            result.ShortName = filename;
             return result;
         }
 

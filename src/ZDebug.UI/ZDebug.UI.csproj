@@ -49,6 +49,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="vis\g5c.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vis\locations.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="vis\test.zvis">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

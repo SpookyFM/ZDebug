@@ -4,7 +4,20 @@
                     xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
                    >
     <ContextMenu x:Key="VariableViewContextMenu" x:Shared="True"
-                    ItemsSource="{x:Static ui:VariableViews.AllViews}">
+                    >
+        <ContextMenu.ItemsSource>
+            <CompositeCollection>
+                <CollectionContainer Collection="{x:Static ui:VariableViews.AllViews}" />
+                <MenuItem Header="Copy Value" Command="ApplicationCommands.Copy">
+                    
+                    <MenuItem.CommandParameter>
+                      
+                            <Binding Path="PlacementTarget.DataContext" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=ContextMenu}" />
+                         
+                    </MenuItem.CommandParameter>
+                </MenuItem>
+            </CompositeCollection>
+        </ContextMenu.ItemsSource>
       <ContextMenu.Resources>
         <ui:VariableViewMultiValueConverter x:Key="VariableViewMultiValueConverter" />
       </ContextMenu.Resources>

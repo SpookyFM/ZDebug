@@ -38,6 +38,13 @@ namespace ZDebug.UI.Services
             return reader.NextByte();
         }
 
+        public override void executeVisualizer(string name, ushort value)
+        {
+            var variableView = VariableViews.StringsByID[name];
+            string viewResult = variableView.ConvertToString(value, reader.Memory);
+            result.Append(viewResult);
+        }
+
         public override void print(params object[] args)
         {
             if (args.Length == 2)
