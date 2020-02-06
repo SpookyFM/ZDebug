@@ -83,6 +83,32 @@ namespace ZDebug.Core.Text
         {
             var zchars = ZWordsToZChars(zwords);
 
+            return ZCharsAsString(zchars, flags, alphabetTable, builder);
+        }
+
+        public string ZWordsAsString(ushort[] zwords, ZTextFlags flags)
+        {
+            return ZWordsAsString(zwords, flags, alphabetTable, builder);
+        }
+
+        public string ZCharsAsString(byte[] zchars, ZTextFlags flags)
+        {
+            return ZCharsAsString(zchars, flags, alphabetTable, builder);
+        }
+
+        public string ZSCIIAsString(byte[] zsciiArray)
+        {
+            // TODO: It's more complex than this but should be ok for now
+            builder.Clear();
+            foreach (byte currentByte in zsciiArray)
+            {
+                builder.Append((char)currentByte);
+            }
+            return builder.ToString();
+        }
+
+        private string ZCharsAsString(byte[] zchars, ZTextFlags flags, AlphabetTable alphabetTable, StringBuilder builder)
+        {
             builder.Clear();
             if (builder.Capacity < zchars.Length)
             {
@@ -196,11 +222,6 @@ namespace ZDebug.Core.Text
             }
 
             return builder.ToString();
-        }
-
-        public string ZWordsAsString(ushort[] zwords, ZTextFlags flags)
-        {
-            return ZWordsAsString(zwords, flags, alphabetTable, builder);
         }
 
 

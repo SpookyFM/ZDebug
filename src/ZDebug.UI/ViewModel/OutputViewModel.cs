@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Composition;
 using System.Globalization;
 using System.Media;
@@ -163,16 +164,27 @@ namespace ZDebug.UI.ViewModel
 
         public void ReadChar(Action<char> callback)
         {
-            debuggerService.BeginAwaitingInput();
-
-            mainWindow.ReadChar(ch =>
+            if (gameScriptService.HasNextCommand())
             {
                 ResetStatusHeight();
                 currStatusHeight = 0;
 
-                callback(ch);
-                debuggerService.EndAwaitingInput();
-            });
+                string command = gameScriptService.GetNextCommand();
+                callback(command[0]);
+            }
+            else
+            {
+                debuggerService.BeginAwaitingInput();
+
+                mainWindow.ReadChar(ch =>
+                {
+                    ResetStatusHeight();
+                    currStatusHeight = 0;
+
+                    callback(ch);
+                    debuggerService.EndAwaitingInput();
+                });
+            }
         }
 
         public void ReadCommand(int maxChars, Action<string> callback)

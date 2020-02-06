@@ -20,9 +20,11 @@ namespace ZDebug.UI.Services
         public static VariableView FunctionView { get; }
         public static VariableView ParseEntryView { get; }
         public static VariableView ParseBufferView { get; }
+        public static VariableView TextBufferView { get; }
         public static VariableView DictionaryEntryView { get; }
         public static VariableView TableView { get; }
         public static VariableView WorldListView { get; }
+        public static VariableView InterruptView { get; }
 
         static VariableViews()
         {
@@ -153,6 +155,27 @@ namespace ZDebug.UI.Services
                 return builder.ToString();
             });
 
+            TextBufferView = new VariableView("tb", "Text buffer", (value, memory) =>
+            {
+                StringBuilder result = new StringBuilder();
+
+                //  The maximal number of characters - 1 is in byte 0
+                ushort currentPosition = value;
+                byte maxNumChars = memory[currentPosition++];
+                byte currentByte = memory[currentPosition++];
+                List<Byte> zchars = new List<byte>();
+                while (currentByte != 0)
+                {
+                    zchars.Add(currentByte);
+                    currentByte = memory[currentPosition++];
+                }
+
+                var storyService = App.Current.GetService<StoryService>();
+                var currentString = storyService.Story.ZText.ZSCIIAsString(zchars.ToArray());
+                return String.Format("Max chars: {0}: \"{1}\"", maxNumChars, currentString);
+
+            });
+
             DictionaryEntryView = new VariableView("de", "Dictionary entry", (value, memory) =>
             {
                 var storyService = App.Current.GetService<StoryService>();
@@ -196,6 +219,10 @@ namespace ZDebug.UI.Services
             WorldListView = new VariableView("wl", "Word list view", (value, memory) =>
             {
                 var reader = new MemoryReader(memory, value);
+                // TODO: Temporary code to get to an array of word list pointers
+                /* var startAddress = reader.NextWord();
+                startAddress = reader.NextWord();
+                reader = new MemoryReader(memory, startAddress); */
                 var maxAddress = reader.NextWord();
                 var currentAddress = reader.NextWord();
 
@@ -218,6 +245,21 @@ namespace ZDebug.UI.Services
             FunctionView = new VariableView("func", "Function view", (value, memory) =>
             {
                 return "not yet implemented";
+            });
+
+            InterruptView = new VariableView("interrupt", "Interrupt view", (value, memory) =>
+            {
+                StringBuilder result = new StringBuilder();
+                int maxInterrupts = 0x64 / 4;
+                var reader = new MemoryReader(memory, value);
+                for (int currentIndex = 0; currentIndex < maxInterrupts; currentIndex++)
+                {
+                    ushort function = reader.NextWord();
+                    ushort counter = reader.NextWord();
+                    string s = String.Format("[{0:X};{1}]", function * 4, (short) counter);
+                    result.Append(s);
+                }
+                return result.ToString();
             });
         }
 

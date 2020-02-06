@@ -1,0 +1,28 @@
+﻿byte length
+length = 50
+word gfiveb
+gfiveb = valueWord
+seek(gfiveb)
+readWord()
+word lzeroone
+lzeroone = readWord()
+seek(lzeroone)
+word lzerotwo
+word loc
+word dest
+word dir
+for (i = 0..9) {
+	lzerotwo = readWord()
+	pushPosition()
+	seek(lzerotwo)
+	loc = readWord()
+	dir = readWord()
+	dest = readWord()
+	printObject(loc)
+	print(" ")
+	printObject(dest)
+	print(" ")
+	printPString(dir)
+	print(" ")
+	popPosition()
+}
