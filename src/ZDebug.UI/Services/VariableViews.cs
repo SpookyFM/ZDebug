@@ -252,7 +252,7 @@ namespace ZDebug.UI.Services
                     var word = PackedStringView.ConvertToString(currentWord, memory);
                     words.Add(word);
                 }
-                return "Index: " + currentIndex + ": " + string.Join(",", words);
+                return "Index: " + currentIndex + ": " + string.Join("|", words);
             });
 
 
