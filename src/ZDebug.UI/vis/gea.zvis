@@ -1,0 +1,14 @@
+﻿word start
+start = valueWord
+seek(start)
+word currentValue
+currentValue = readWord()
+print(currentValue, 16)
+print("X")
+for (i = 0..24) {
+	currentValue = readWord()
+	executeVisualizer("str", currentValue)
+	print("X")
+	currentValue = readWord()
+	executeVisualizer("hex", currentValue)
+}

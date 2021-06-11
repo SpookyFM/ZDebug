@@ -77,6 +77,7 @@ namespace ZDebug.UI.ViewModel
                 // Add one for the default object
                 objects.Add(new ObjectViewModelDefault());
                 byte? propertyToTest = null; // 0x30;
+                byte? attributeToTest = 0x2f;
                 foreach (var obj in e.Story.ObjectTable)
                 {
                     for (var i = 0; i < 64; i++)
@@ -85,7 +86,9 @@ namespace ZDebug.UI.ViewModel
                             unusedProperties.Remove(i);
                         }
                     }
-                    if (!propertyToTest.HasValue || obj.PropertyTable.GetByNumber(propertyToTest ?? 0) != null)
+                    bool passesPropertyFilter = !propertyToTest.HasValue || obj.PropertyTable.GetByNumber(propertyToTest ?? 0) != null;
+                    bool passesAttributeFilter = !attributeToTest.HasValue || obj.HasAttribute(attributeToTest.Value);
+                    if (passesPropertyFilter && passesAttributeFilter)
                     {
                         objects.Add(new ObjectViewModel(obj));
                     }

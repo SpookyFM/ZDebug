@@ -33,8 +33,8 @@ namespace ZDebug.UI.ViewModel
             this.storyService.StoryClosing += StoryService_StoryClosing;
 
             entries = new BulkObservableCollection<DictionaryEntryViewModel>();
-            test.Bitmap = 0xcb;
-            test.ByteToApplyTo = 1;
+            test.Bitmap = 0x40;
+            test.ByteToApplyTo = 0;
         }
 
         private void StoryService_StoryOpened(object sender, StoryOpenedEventArgs e)

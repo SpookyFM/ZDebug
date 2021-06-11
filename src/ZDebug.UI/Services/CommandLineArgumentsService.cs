@@ -12,11 +12,13 @@ namespace ZDebug.UI.Services
         private readonly StoryService storyService;
         private readonly DebuggerService debuggerService;
 
+        private bool? shouldWipe = null;
+
         [ImportingConstructor]
         public CommandLineArgumentsService(StoryService storyService, DebuggerService debuggerService)
         {
             this.storyService = storyService;
-            this.debuggerService = debuggerService;
+            this.debuggerService = debuggerService;            
         }
 
         public bool HandleArguments(StartupEventArgs arguments)
@@ -25,6 +27,7 @@ namespace ZDebug.UI.Services
             var flags = new Dictionary<string, bool?>();
             flags["autorun"] = null;
             flags["help"] = null;
+            flags["wipe"] = null;
             var singleArguments = new List<string>();
 
             string currentKey = null;
@@ -66,6 +69,11 @@ namespace ZDebug.UI.Services
                 return false;
             }
 
+            if (flags["wipe"].GetValueOrDefault(false))
+            {
+                this.shouldWipe = true;
+            }
+
             if (singleArguments.Count == 1)
             {
                 if (flags["autorun"].GetValueOrDefault(false))
@@ -91,7 +99,16 @@ namespace ZDebug.UI.Services
             Console.WriteLine("Arguments:");
             Console.WriteLine("--help: Prints this usage guide");
             Console.WriteLine("--autorun: Starts the provided z-machine file automatically");
+            Console.WriteLine("--wipe: Forget all data about this story (visualizers, breakpoints etc.)");
             Console.WriteLine("[z-file]: Path to a z-machine file that will be loaded in automatically");
+        }
+
+        public bool ShouldWipe
+        {
+            get
+            {
+                return shouldWipe.GetValueOrDefault(false);
+            }
         }
 
     }

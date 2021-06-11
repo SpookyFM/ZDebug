@@ -52,6 +52,11 @@ namespace ZDebug.Core.Objects
             this.propertyTableAddressOffset = (byte)(version <= 3 ? 7 : 12);
 
             this.objects = ReadAllObjects();
+            this.MoveObjectToDestinationByNumber(393, 66);
+            this.MoveObjectToDestinationByNumber(338, 66);
+            this.MoveObjectToDestinationByNumber(192, 66);
+            this.MoveObjectToDestinationByNumber(265, 66);
+
 
             this.propertyTables = new IntegerMap<ZPropertyTable>(objects.Length);
         }

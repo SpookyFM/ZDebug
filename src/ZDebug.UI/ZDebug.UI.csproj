@@ -49,10 +49,34 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="vis\g06.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vis\g08.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vis\g0a_wl.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vis\g0a_strings.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vis\g31.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="vis\g5c.zvis">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="vis\g71.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vis\gea.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="vis\locations.zvis">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vis\tableDictEntries.zvis">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="vis\test.zvis">

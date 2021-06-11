@@ -14,6 +14,7 @@ namespace ZDebug.UI.Services
         private readonly IPersistable gameScriptPersistence;
         private readonly IPersistable routinePersistence;
         private readonly IPersistable variableViewsPersistence;
+        private readonly CommandLineArgumentsService commandLineArgumentsService;
 
 
         [ImportingConstructor]
@@ -23,7 +24,8 @@ namespace ZDebug.UI.Services
             DataBreakpointService dataBreakpointService,
             GameScriptService gameScriptService,
             RoutineService routineService,
-            VariableViewService variableViewService
+            VariableViewService variableViewService,
+            CommandLineArgumentsService commandLineArgumentsService
             )
         {
             this.storyPersistence = storyService;
@@ -34,11 +36,15 @@ namespace ZDebug.UI.Services
             this.gameScriptPersistence = gameScriptService;
             this.routinePersistence = routineService;
             this.variableViewsPersistence = variableViewService;
+            this.commandLineArgumentsService = commandLineArgumentsService;
         }
 
         private void StoryService_StoryOpened(object sender, StoryOpenedEventArgs e)
         {
-            LoadSettings(e.Story);
+            if (!this.commandLineArgumentsService.ShouldWipe)
+            {
+                LoadSettings(e.Story);      
+            }
         }
 
         private void StoryService_StoryClosing(object sender, StoryClosingEventArgs e)

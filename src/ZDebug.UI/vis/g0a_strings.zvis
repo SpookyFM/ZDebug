@@ -1,0 +1,13 @@
+﻿byte length
+length = 40
+word start
+start = valueWord
+seek(start)
+start = readWord()
+seek(start)
+word currentValue
+for (i = 0..length) {
+   currentValue = readWord()
+   executeVisualizer("strp", currentValue)
+   print(" X ")
+}

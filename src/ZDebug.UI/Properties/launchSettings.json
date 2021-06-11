@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ZDebug.UI": {
+      "commandName": "Project",
+      "commandLineArgs": "--wipe"
+    }
+  }
+}

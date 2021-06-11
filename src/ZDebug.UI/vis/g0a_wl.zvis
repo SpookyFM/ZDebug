@@ -1,0 +1,8 @@
+﻿byte length
+length = 40
+word start
+start = valueWord
+seek(start)
+start = readWord()
+start = readWord()
+executeVisualizer("wl", start)

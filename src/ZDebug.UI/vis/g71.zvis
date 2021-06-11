@@ -1,0 +1,6 @@
+﻿word start
+start = valueWord
+seek(start)
+word currentValue
+currentValue = readWord()
+executeVisualizer("wl", currentValue)

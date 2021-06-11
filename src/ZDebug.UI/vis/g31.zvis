@@ -1,0 +1,11 @@
+﻿byte length
+length = 40
+word start
+start = valueWord
+seek(start)
+word currentValue
+for (i = 0..length) {
+   currentValue = readWord()
+   executeVisualizer("obj", currentValue)
+   print(" X ")
+}

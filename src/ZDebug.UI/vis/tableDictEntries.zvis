@@ -1,0 +1,11 @@
+﻿byte length
+length = 21
+word start
+start = valueWord
+seek(start)
+word currentValue
+for (i = 0..length) {
+   currentValue = readWord()
+   print(currentValue, 16)
+   print(" X ")
+}
